@@ -104,6 +104,11 @@ var SampleApp = function() {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('index.html') );
         };
+		
+		self.routes['/bonjour'] = function(req, res) {
+			res.setHeader('Content-Type', 'text/html');
+			res.send("<html><body><p>Bonjour !</p></body></html>");
+		};
     };
 
 
