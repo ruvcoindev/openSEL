@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	h2 Entrez votre nom d'utilisateur et votre mot de passe
+	p form(method='post', action='/login', id='login-form')
+		.form-group
+			label(for='username') Utilisateur
+			input(type='text', name='username', class='form-control', id='username', placeholder="Entrez votre nom d'utilisateur")
+		.form-group
+			label(for='password') Mot de passe
+			input(type='password', name='password', class='form-control', id='password', placeholder="Entrez votre mot de passe");
+		.form-group	
+			button.btn.btn-default Se connecter
