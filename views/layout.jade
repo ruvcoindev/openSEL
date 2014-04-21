@@ -1,0 +1,25 @@
+doctype html
+html
+	include header
+	body
+	#conteneur
+		h1(id="header")
+			a(href="#", title="Lambersel - Acceuil")
+				span Lambersel
+				
+		nav
+			ul(id="menu")
+				li: a(href="#") Se connecter
+				li: a(href="#") Nouvelles
+				li: a(href="#") Un SEL ?
+				li: a(href="#") FAQ
+				li: a(href="#") Les amis
+
+		#contenu
+			block content
+
+		p(id="footer") Site web fonctionnant avec 
+			a(href="https://github.com/") openSEL
+			, Template provenant de 
+			a(href="http://www.alsacreations.com/tuto/lire/555-design-css.html") AlsaCreation
+			
