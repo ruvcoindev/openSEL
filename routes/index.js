@@ -1,6 +1,7 @@
 ﻿
 var flash = {};
 var databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+var pg = require('pg');
 
 /**
  * GET home page
