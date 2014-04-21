@@ -76,7 +76,9 @@ exports.databaseReset = function(req, res) {
 			return true;
 		};
 		
-		client.query("DROP TABLE IF EXISTS user");
+		client.query("DROP TABLE IF EXISTS user", function(err) {
+			if ( handleError(err) ) return;
+		});
 
 		client.query("CREATE TABLE user( "
 						+ "user_id SERIAL"
