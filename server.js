@@ -113,7 +113,7 @@ var SampleApp = function() {
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({ secret: 'sel' }));
 		
-		self.app.use(app.router);
+		self.app.use(self.app.router);
 		
 		self.createRoutes();
     };
