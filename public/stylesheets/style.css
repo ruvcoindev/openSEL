@@ -135,3 +135,13 @@ pre span.comment
 {
     color: #b30000 ;
 }
+
+div.form-group
+{
+	height: 30px;
+}
+
+div.form-group label 
+{
+	width: 120px;
+}
