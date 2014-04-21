@@ -107,7 +107,7 @@ var SampleApp = function() {
 		
 		self.routes['/bonjour'] = function(req, res) {
 			res.setHeader('Content-Type', 'text/html');
-			res.send("<html><body><p>Bonjour !</p></body></html>");
+			res.send("<html><body><p>Bonjour ! test</p></body></html>");
 		};
     };
 
