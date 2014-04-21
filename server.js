@@ -126,8 +126,8 @@ var SampleApp = function() {
 
 		//	Setup middleware
 		self.app.use(express.static(self.pub));
-		app.set('views', __dirname + '/views');
-		app.set('view engine', 'jade');
+		self.app.set('views', __dirname + '/views');
+		self.app.set('view engine', 'jade');
 
 		
         //  Add handlers for the app (from the routes).
