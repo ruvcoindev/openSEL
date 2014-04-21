@@ -9,13 +9,21 @@ html
 				
 		nav
 			ul(id="menu")
-				li: a(href="#") Se connecter
+				li: a(href="/login") Se connecter
 				li: a(href="#") Nouvelles
 				li: a(href="#") Un SEL ?
 				li: a(href="#") FAQ
 				li: a(href="#") Les amis
 
 		#contenu
+			if flash
+				p flash
+					div.alert(class='#{flash.type}')
+						ul
+						- for (var i = 0; i < flash.messages.length; i++) {
+								li #{flash.messages[i].msg}
+						- }
+						ul
 			block content
 
 		p(id="footer") Site web fonctionnant avec 
