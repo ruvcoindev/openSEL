@@ -25,13 +25,11 @@ h1#header
 
 h1#header a
 {
-    width: 400px ;
-    height: 70px ;
+    width: 770px ;
+    height: 258px ;
     display: block ;
     background: url(../images/title.gif) no-repeat ;
     position: relative ;
-    left: 350px ;
-    top: 15px ;
     text-indent: -5000px ;
 }
 
