@@ -30,7 +30,7 @@ exports.logout = function(req, res) {
  */
 exports.dashboard = function(req, res) {
 	res.setHeader('Content-Type','text/html');
-	req.render('dashboard');
+	res.render('dashboard');
 };
 
 /**
