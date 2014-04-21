@@ -89,9 +89,14 @@ var SampleApp = function() {
 		self.app.get('/login', routes.login);
 		self.app.get('/logout', routes.logout);
 		self.app.get('/dashboard', self.restrict, routes.dashboard);
+		self.app.get('/dashboard/administration', self.restrict, routes.administration);
+		self.app.get('/dashboard/users', self.restrict, routes.users);
+		self.app.get('/dashboard/users/new', self.restrict, routes.newUser);
+		self.app.get('/dashboard/databaseReset', self.restrict, routes.databaseReset);
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
+		self.app.post('dashboard/users/new', self.restrict, routes.addUser);
 		
     };
 
