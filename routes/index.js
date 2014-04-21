@@ -1,5 +1,6 @@
-
+ï»¿
 var flash = {};
+var databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 
 /**
  * GET home page
@@ -61,9 +62,35 @@ exports.newUser = function(req, res) {
  * GET databaseReset
  */
 exports.databaseReset = function(req, res) {
-	flash.type = 'alert-info';
-	flash.messages = [{ msg: 'La base de données viens d\'être ré-installée.' }];
-	res.render('dashboard/administration', { flash: flash });
+	
+	
+	// get a pg client from the connection pool
+	pg.connect(databaseURL, function(err, client) {
+		
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("DROP TABLE IF EXISTS user");
+
+		client.query("CREATE TABLE user( "
+						+ "user_id SERIAL"
+						+ ", password CHARACTER VARYING(24)"
+						+ ", username CHARACTER VARYING(24) )"), function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			flash.type = 'alert-info';
+			flash.messages = [{ msg: 'La base de donnÃ©e viens d\'Ãªtre rÃ©-installÃ©e.' }];
+			res.render('dashboard/administration', { flash: flash });						
+		});
+	});
+	
+	
 };
 
 /**
@@ -71,7 +98,7 @@ exports.databaseReset = function(req, res) {
  */
 exports.addUser = function(req, res) {
 	flash.type = 'alert-info';
-	flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
+	flash.messages = [{ msg: 'Le nouvel utilisateur a Ã©tÃ© enregistrÃ©.' }];
 	res.render('dashboard/administration', { flash: flash });
 };
 
@@ -92,7 +119,7 @@ exports.loginUser = function(req, res) {
 	}
 	else {
 		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'Désolé, le mot de passe ou le nom d\'utilisateur est érroné.' }];
+		flash.messages = [{ msg: 'DÃ©solÃ©, le mot de passe et/ou le nom d\'utilisateur sont Ã©ronnÃ©s.' }];
 		res.render('login', { flash: flash });
 	}
 };
