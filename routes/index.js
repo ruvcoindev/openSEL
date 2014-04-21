@@ -76,12 +76,12 @@ exports.databaseReset = function(req, res) {
 			return true;
 		};
 		
-		client.query("DROP TABLE IF EXISTS user", function(err) {
+		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
 			if ( handleError(err) ) return;
 		});
 
-		client.query("CREATE TABLE user( "
-						+ "user_id SERIAL"
+		client.query("CREATE TABLE utilisateur( "
+						+ "id SERIAL"
 						+ ", password CHARACTER VARYING(24)"
 						+ ", username CHARACTER VARYING(24) )", function(err, result) {
 			if ( handleError(err) ) return;
