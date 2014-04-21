@@ -66,7 +66,7 @@ exports.databaseReset = function(req, res) {
 	
 	
 	// get a pg client from the connection pool
-	pg.connect(databaseURL, function(err, client) {
+	pg.connect(databaseURL, function(err, client, done) {
 		
 		var handleError = function(err) {
 			if (!err) return false;
