@@ -109,6 +109,8 @@ var SampleApp = function() {
 		self.app.set('views', __dirname + '/views');
 		self.app.set('view engine', 'jade');
 
+		self.app.use(express.bodyParser());
+		
 		// add session support
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({ secret: 'sel' }));
