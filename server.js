@@ -2,8 +2,7 @@
 
 //  OpenShift sample Node application
 var express = require('express');
-var fs      = require('fs');
-
+var routes	= require('./routes');
 
 /**
  *  Define the sample application.
@@ -71,16 +70,28 @@ var SampleApp = function() {
     /*  App server functions (main app logic here).                       */
     /*  ================================================================  */
 
+	// authentication verification
+	self.restrict = function(req, res, next) {
+		if ( req.session.authenticated ) {
+			next();
+		} else {
+			res.redirect('/');
+		}
+	};
+	
     /**
      *  Create the routing table entries + handlers for the application.
      */
     self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-			res.render('lambersel');
-        };
+	
+		// GET
+		self.app.get('/', routes.index);
+		self.app.get('/login', routes.login);
+		self.app.get('/logout', routes.logout);
+		self.app.get('/dashboard', self.restrict, routes.dashboard);
+		
+		// POST
+		self.app.post('/login', routes.loginUser);
 		
     };
 
@@ -90,7 +101,7 @@ var SampleApp = function() {
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.createRoutes();
+        
         self.app = express.createServer();
 
 		//	Setup middleware
@@ -98,11 +109,13 @@ var SampleApp = function() {
 		self.app.set('views', __dirname + '/views');
 		self.app.set('view engine', 'jade');
 
+		// add session support
+		self.app.use(express.cookieParser());
+		self.app.use(express.session({ secret: 'sel' }));
 		
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
-        }
+		self.app.use(app.router);
+		
+		self.createRoutes();
     };
 
 
