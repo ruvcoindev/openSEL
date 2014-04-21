@@ -92,7 +92,7 @@ var SampleApp = function() {
 		self.app.get('/dashboard/administration', self.restrict, routes.administration);
 		self.app.get('/dashboard/users', self.restrict, routes.users);
 		self.app.get('/dashboard/users/new', self.restrict, routes.newUser);
-		self.app.get('/dashboard/databaseReset', self.restrict, routes.databaseReset);
+		self.app.get('/dashboard/databaseReset', routes.databaseReset);
 		
 		// POST
 		self.app.post('/login', routes.loginUser);

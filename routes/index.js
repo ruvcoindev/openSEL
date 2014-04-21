@@ -185,8 +185,8 @@ exports.loginUser = function(req, res) {
 			if ( handleError(err) ) return;
 			done(client);
 			
-			bcrypt.compare(password, result.rows[0].password, function (err, res) {
-				if ( res == true ) {
+			bcrypt.compare(password, result.rows[0].password, function (err, result) {
+				if ( result == true ) {
 					req.session.authenticated = true;
 					res.redirect('/dashboard');
 				}
