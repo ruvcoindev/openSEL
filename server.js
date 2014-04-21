@@ -1,4 +1,5 @@
 #!/bin/env node
+
 //  OpenShift sample Node application
 var express = require('express');
 var fs      = require('fs');
@@ -31,6 +32,8 @@ var SampleApp = function() {
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
         };
+		
+		self.pub = __dirname + '/public';
     };
 
 
@@ -102,7 +105,8 @@ var SampleApp = function() {
 
         self.routes['/'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
+			res.render('lambersel');
+            //res.send(self.cache_get('index.html') );
         };
 		
 		self.routes['/bonjour'] = function(req, res) {
@@ -120,6 +124,12 @@ var SampleApp = function() {
         self.createRoutes();
         self.app = express.createServer();
 
+		//	Setup middleware
+		self.app.use(express.static(pub));
+		app.set('views', __dirname + '/views');
+		app.set('view engine', 'jade');
+
+		
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
             self.app.get(r, self.routes[r]);
