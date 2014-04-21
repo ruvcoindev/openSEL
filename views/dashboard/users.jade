@@ -1,0 +1,10 @@
+﻿extends layout
+
+block content
+
+	if users
+		p users
+			ul
+			- each user in users
+				li #{user.id} - #{user.username}
+			ul

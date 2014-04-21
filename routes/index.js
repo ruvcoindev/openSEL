@@ -48,8 +48,25 @@ exports.administration = function(req, res) {
  * GET users
  */
 exports.users = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('dashboard/users');
+	// get a pg client from the connection pool
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id, username FROM utilisateur", function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('dashboard/users',{ users: result.rows });
+		});
+	});
 };
 
 /**
