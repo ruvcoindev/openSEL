@@ -2,9 +2,9 @@
 
 block content
 
+	h2 Liste des utilisateurs
 	if users
-		p users
-			ul
-			- each user in users
-				li #{user.id} - #{user.username}
-			ul
+		ul
+		- each user in users
+			li #{user.id} - #{user.username}
+		ul
