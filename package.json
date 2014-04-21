@@ -1,15 +1,15 @@
 {
-  "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "OpenSEL",
+  "version": "0.0.1",
+  "description": "OpenSEL",
   "keywords": [
-    "OpenShift",
+    "OpenSEL",
     "Node.js",
     "application",
     "openshift"
   ],
   "author": {
-    "name": "OpenShift",
+    "name": "lambersel",
     "email": "ramr@example.org",
     "url": "http://www.openshift.com/"
   },
@@ -25,7 +25,8 @@
   },
 
   "dependencies": {
-    "express": "~3.4.4"
+    "express": "~3.4.4",
+	"jade": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
