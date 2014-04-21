@@ -125,7 +125,7 @@ var SampleApp = function() {
         self.app = express.createServer();
 
 		//	Setup middleware
-		self.app.use(express.static(pub));
+		self.app.use(express.static(self.pub));
 		app.set('views', __dirname + '/views');
 		app.set('view engine', 'jade');
 
