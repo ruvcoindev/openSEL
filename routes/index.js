@@ -63,8 +63,8 @@ exports.newUser = function(req, res) {
 exports.databaseReset = function(req, res) {
 	flash.type = 'alert-info';
 	flash.messages = [{ msg: 'La base de données viens d\'être ré-installée.' }];
-	res.render('/dashboard/administration', { flash: flash });
-);
+	res.render('dashboard/administration', { flash: flash });
+};
 
 /**
  * POST new user
