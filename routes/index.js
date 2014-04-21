@@ -2,6 +2,7 @@
 var flash = {};
 var databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 var pg = require('pg');
+var bcrypt = require('bcrypt');
 
 /**
  * GET home page
@@ -64,7 +65,6 @@ exports.newUser = function(req, res) {
  */
 exports.databaseReset = function(req, res) {
 	
-	
 	// get a pg client from the connection pool
 	pg.connect(databaseURL, function(err, client, done) {
 		
@@ -82,8 +82,9 @@ exports.databaseReset = function(req, res) {
 
 		client.query("CREATE TABLE utilisateur( "
 						+ "id SERIAL"
-						+ ", password CHARACTER VARYING(24)"
+						+ ", password CHARACTER VARYING"
 						+ ", username CHARACTER VARYING(24) )", function(err, result) {
+						
 			if ( handleError(err) ) return;
 			
 			done(client);
@@ -92,20 +93,43 @@ exports.databaseReset = function(req, res) {
 			res.render('dashboard/administration', { flash: flash });						
 		});
 	});
-	
-	
 };
 
 /**
  * POST new user
  */
 exports.addUser = function(req, res) {
-	flash.type = 'alert-info';
-	flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
-	res.render('dashboard/administration', { flash: flash });
+
+	var username = req.body.username;
+	var password = req.body.password;
+	
+	// get a pg client from the connection pool
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		bcrypt.genSalt(10, function(err, salt) {
+			bcrypt.hash(password, salt, function(err, hash) {
+				client.query("INSERT INTO utilisateur(username, password)"
+							+ " VALUES($1, $2)", [username, password], function(err, result) {
+							
+					if ( handleError(err) ) return;
+					
+					done(client);
+					flash.type = 'alert-info';
+					flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
+					res.render('dashboard/administration', { flash: flash });
+				});						
+			});
+		});
+	});
 };
-
-
 
 
 /**

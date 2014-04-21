@@ -96,7 +96,7 @@ var SampleApp = function() {
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
-		self.app.post('dashboard/users/new', self.restrict, routes.addUser);
+		self.app.post('/dashboard/users/new', self.restrict, routes.addUser);
 		
     };
 
