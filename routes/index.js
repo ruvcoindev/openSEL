@@ -80,7 +80,7 @@ exports.databaseReset = function(req, res) {
 		client.query("CREATE TABLE user( "
 						+ "user_id SERIAL"
 						+ ", password CHARACTER VARYING(24)"
-						+ ", username CHARACTER VARYING(24) )"), function(err, result) {
+						+ ", username CHARACTER VARYING(24) )", function(err, result) {
 			if ( handleError(err) ) return;
 			
 			done(client);
