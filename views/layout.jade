@@ -9,11 +9,14 @@ html
 				
 		nav
 			ul(id="menu")
-				li: a(href="/login") Se connecter
-				li: a(href="#") Nouvelles
-				li: a(href="#") Un SEL ?
-				li: a(href="#") FAQ
-				li: a(href="#") Les amis
+				if authenticated
+					li: a(href="/logout") Déconnection
+				else
+					li: a(href="/login") Se connecter
+				if authenticated
+					li: a(href="/compte") Mon compte
+					li: a(href="/catalogue") Le catalogue
+					li: a(href="/administration") Administration
 
 		#contenu
 			if flash
@@ -27,7 +30,7 @@ html
 			block content
 
 		p(id="footer") Site web fonctionnant avec 
-			a(href="https://github.com/") openSEL
-			, Template provenant de 
+			a(href="https://github.com/KevinPolez/openSEL") openSEL
+			, template provenant de 
 			a(href="http://www.alsacreations.com/tuto/lire/555-design-css.html") AlsaCreation
 			

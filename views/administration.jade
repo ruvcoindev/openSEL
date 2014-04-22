@@ -1,0 +1,15 @@
+﻿extends layout
+
+block content
+	h2 Utilisateurs
+	p
+		nav
+			ul(id="utilisateur_action")
+				li: a(href="/users") Lister les utilisateurs
+				li: a(href="/users/new") Ajouter un utilisateur
+
+	h2 Base de données
+	p 
+		nav
+			ul(id="bdd_action")
+				li: a(href="/databaseReset") Créer la base de données

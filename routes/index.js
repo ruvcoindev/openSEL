@@ -1,5 +1,4 @@
-﻿
-var flash = {};
+﻿var flash = {};
 var databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 var pg = require('pg');
 var bcrypt = require('bcrypt');
@@ -9,7 +8,7 @@ var bcrypt = require('bcrypt');
  */
 exports.index = function(req, res) {
 	res.setHeader('Content-Type', 'text/html');
-	res.render('lambersel');
+	res.render('index');
 };
 
 /**
@@ -29,11 +28,19 @@ exports.logout = function(req, res) {
 };
 
 /**
- * GET dashboard page
+ * GET account page
  */
-exports.dashboard = function(req, res) {
+exports.account = function(req, res) {
 	res.setHeader('Content-Type','text/html');
-	res.render('dashboard');
+	res.render('account');
+};
+
+/**
+ * GET services list page
+ */
+exports.services = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('services');
 };
 
 /**
@@ -41,7 +48,7 @@ exports.dashboard = function(req, res) {
  */
 exports.administration = function(req, res) {
 	res.setHeader('Content-Type','text/html');
-	res.render('dashboard/administration');
+	res.render('administration');
 };
 
 /**
@@ -65,7 +72,7 @@ exports.users = function(req, res) {
 			
 			done(client);
 			res.setHeader('Content-Type','text/html');
-			res.render('dashboard/users',{ users: result.rows });
+			res.render('users',{ users: result.rows });
 		});
 	});
 };
@@ -76,7 +83,7 @@ exports.users = function(req, res) {
  */
 exports.newUser = function(req, res) {
 	res.setHeader('Content-Type','text/html');
-	res.render('dashboard/new_user');
+	res.render('users/new');
 };
 
 /**
@@ -120,7 +127,7 @@ exports.databaseReset = function(req, res) {
 					done(client);
 					flash.type = 'alert-info';
 					flash.messages = [{ msg: 'La base de donnée viens d\'être ré-installée.' }];
-					res.render('dashboard/administration', { flash: flash });						
+					res.render('administration', { flash: flash });						
 				});
 			});
 		});
@@ -156,7 +163,7 @@ exports.addUser = function(req, res) {
 					done(client);
 					flash.type = 'alert-info';
 					flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
-					res.render('dashboard/administration', { flash: flash });
+					res.render('administration', { flash: flash });
 				});						
 			});
 		});
@@ -188,7 +195,7 @@ exports.loginUser = function(req, res) {
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
 				if ( result == true ) {
 					req.session.authenticated = true;
-					res.redirect('/dashboard');
+					res.redirect('/');
 				}
 				else {
 					flash.type = 'alert-info';

@@ -75,7 +75,8 @@ var SampleApp = function() {
 		if ( req.session.authenticated ) {
 			next();
 		} else {
-			res.redirect('/');
+			req.session.error = 'Vous devez être connecter pour acceder à cette page';
+			res.redirect('/login');
 		}
 	};
 	
@@ -88,15 +89,16 @@ var SampleApp = function() {
 		self.app.get('/', routes.index);
 		self.app.get('/login', routes.login);
 		self.app.get('/logout', routes.logout);
-		self.app.get('/dashboard', self.restrict, routes.dashboard);
-		self.app.get('/dashboard/administration', self.restrict, routes.administration);
-		self.app.get('/dashboard/users', self.restrict, routes.users);
-		self.app.get('/dashboard/users/new', self.restrict, routes.newUser);
-		self.app.get('/dashboard/databaseReset', self.restrict, routes.databaseReset);
+		self.app.get('/compte', self.restrict, routes.account);
+		self.app.get('/catalogue', self.restrict, routes.services);
+		self.app.get('/administration', self.restrict, routes.administration);
+		self.app.get('/users', self.restrict, routes.users);
+		self.app.get('/users/new', self.restrict, routes.newUser);
+		self.app.get('/databaseReset', self.restrict, routes.databaseReset);
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
-		self.app.post('/dashboard/users/new', self.restrict, routes.addUser);
+		self.app.post('/users/new', self.restrict, routes.addUser);
 		
     };
 
@@ -119,6 +121,20 @@ var SampleApp = function() {
 		// add session support
 		self.app.use(express.cookieParser());
 		self.app.use(express.session({ secret: 'sel' }));
+		self.app.use(function(req, res, next) {
+			var err = req.session.error, 
+				msg = req.session.success;
+				
+			delete req.session.error;
+			delete req.session.success;
+			
+			res.locals.message = '';
+			if (err) res.locals.message = err;
+			if (msg) res.locals.message = msg;
+			
+			res.locals.authenticated = req.session.authenticated;
+			next();
+		});
 		
 		self.app.use(self.app.router);
 		
