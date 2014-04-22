@@ -57,9 +57,7 @@ exports.account = function(req, res) {
 			res.render('index');
 			return true;
 		};
-		
-		SELECT * FROM transaction WHERE transaction.from
-		
+				
 		client.query("SELECT utilisateur.id"
 					+ ", utilisateur.username"
 					+ ", utilisateur.role"
