@@ -7,8 +7,24 @@ var bcrypt = require('bcrypt');
  * GET home page
  */
 exports.index = function(req, res) {
-	res.setHeader('Content-Type', 'text/html');
-	res.render('index');
+
+	pg.connect(databaseURL, function(err, client, done) {
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.setHeader('Content-Type', 'text/html');
+			res.render('index');
+			return true;
+		};
+		
+		client.query("SELECT title, content, creation_date FROM nouvelles ORDER BY creation_date DESC LIMIT 10", function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('index',{ news: result.rows });
+		});
+	});
 };
 
 /**
@@ -107,7 +123,25 @@ exports.databaseReset = function(req, res) {
 		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
 			if ( handleError(err) ) return;
 		});
+		
+		client.query("DROP TABLE IF EXISTS nouvelles", function(err) {
+			if ( handleError(err) ) return;
+		});
 
+		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')"), function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("CREATE TABLE nouvelles( "
+						+ "id SERIAL"
+						+ ", title CHARACTER VARYING(32)"
+						+ ", content TEXT"
+						+ ", creation_date DATE DEFAULT NOW()"
+						+ ", update_date DATE DEFAULT NOW()"
+						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
+			if ( handleError(err) ) return;						
+		});
+		
 		client.query("CREATE TABLE utilisateur( "
 						+ "id SERIAL"
 						+ ", password CHARACTER VARYING"
