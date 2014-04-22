@@ -413,7 +413,7 @@ exports.loginUser = function(req, res) {
 			if ( handleError(err) ) return;
 			done(client);
 			
-			var user_id = result.row[0].id;
+			var user_id = result.rows[0].id;
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
 				if ( result == true ) {
 					req.session.user_id = user_id;
