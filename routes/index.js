@@ -241,7 +241,7 @@ exports.addUser = function(req, res) {
 exports.addNews = function(req, res) {
 
 	var title = req.body.title;
-	var password = req.body.password;
+	var content = req.body.content;
 	
 	pg.connect(databaseURL, function(err, client, done) {
 		var handleError = function(err) {
