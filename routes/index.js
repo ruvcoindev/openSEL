@@ -128,7 +128,7 @@ exports.databaseReset = function(req, res) {
 			if ( handleError(err) ) return;
 		});
 
-		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')"), function(err) {
+		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')", function(err) {
 			if ( handleError(err) ) return;
 		});
 		
