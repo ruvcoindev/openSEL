@@ -112,7 +112,7 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         
-        self.app = express.createServer();
+        self.app = express();
 
 		//	Setup middleware
 		self.app.use(express.static(self.pub));
