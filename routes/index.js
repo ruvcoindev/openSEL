@@ -47,8 +47,38 @@ exports.logout = function(req, res) {
  * GET account page
  */
 exports.account = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('account');
+
+	pg.connect(databaseURL, function(err, client, done) {
+
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.setHeader('Content-Type', 'text/html');
+			res.render('index');
+			return true;
+		};
+		
+		SELECT * FROM transaction WHERE transaction.from
+		
+		client.query("SELECT utilisateur.id"
+					+ ", utilisateur.username"
+					+ ", utilisateur.role"
+					+ ", utilisateur.credit"
+					+ ", utilisateur.creation_date"
+					+ ", array_agg(transaction.*) as transactions"
+					+ ", array_agg(service.*) as services"
+					+ " FROM utilisateur "
+					+ " LEFT JOIN service ON service.user_id = utilisateur.id "
+					+ " LEFT JOIN transaction ON ( transaction.from_user_id = utilisateur.id OR transaction.to_user_id = utilisateur.id)"
+					+ " WHERE utilisateur.id = $1 LIMIT 1", [req.session.user_id],  function(err, result) {
+		
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('account',[ user: result.rows[0]]);
+		});
+	});
 };
 
 /**
@@ -136,6 +166,31 @@ exports.newNews = function(req, res) {
 };
 
 /**
+ * GET new offer form
+ */
+exports.addOfferForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('service/new_offer');
+};
+
+/**
+ * GET new request form
+ */
+exports.addRequestForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('service/new_request');
+};
+
+/**
+ * GET new transaction form
+ */
+exports.addTransactionForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('transaction/new');
+}; 
+
+
+/**
  * GET databaseReset
  * for reset the database
  */
@@ -160,8 +215,36 @@ exports.databaseReset = function(req, res) {
 		client.query("DROP TABLE IF EXISTS nouvelles", function(err) {
 			if ( handleError(err) ) return;
 		});
+		
+		client.query("DROP TABLE IF EXISTS transaction", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("DROP TABLE IF EXISTS service", function(err) {
+			if ( handleError(err) ) return;
+		});
 
+		client.query("DROP TYPE IF EXISTS UTILISATEUR_ROLE CASCADE", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("CREATE TYPE UTILISATEUR_ROLE AS ENUM ('admin', 'user', 'moderator')", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("DROP TYPE IF EXISTS NOUVELLES_STATUS CASCADE", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
 		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("DROP TYPE IF EXISTS SERVICE_TYPE CASCADE", function(err) {
+			if ( handleError(err) ) return;
+		});
+		
+		client.query("CREATE TYPE SERVICE_TYPE AS ENUM ('offer', 'request')", function(err) {
 			if ( handleError(err) ) return;
 		});
 		
@@ -178,16 +261,41 @@ exports.databaseReset = function(req, res) {
 		client.query("CREATE TABLE utilisateur( "
 						+ "id SERIAL"
 						+ ", password CHARACTER VARYING"
-						+ ", username CHARACTER VARYING(24) )", function(err) {
+						+ ", username CHARACTER VARYING(24)"
+						+ ", role UTILISATEUR_ROLE DEFAULT 'user'::UTILISATEUR_ROLE"
+						+ ", credit INTEGER DEFAULT 0"
+						+ ", creation_date DATE DEFAULT NOW()"
+						+ ", update_date DATE DEFAULT NOW())", function(err) {
 			if ( handleError(err) ) return;						
 		});
 		
-		// create first user with a commun password
+		client.query("CREATE TABLE service( "
+						+ "id SERIAL"
+						+ ", user_id INTEGER"
+						+ ", title CHARACTER VARYING(32)"
+						+ ", description TEXT"
+						+ ", type SERVICE_TYPE DEFAULT 'offer'::SERVICE_TYPE"
+						+ ", creation_date DATE DEFAULT NOW()"
+						+ ", update_date DATE DEFAULT NOW())", function(err) {
+			if ( handleError(err) ) return;						
+		});
+		
+		client.query("CREATE TABLE transaction( "
+						+ "id SERIAL"
+						+ ", count INTEGER"
+						+ ", from_user_id INTEGER"
+						+ ", to_user_id INTEGER"
+						+ ", date DATE DEFAULT NOW())", function(err) {
+			if ( handleError(err) ) return;						
+		});
+						
+		
+		// create first admin user with a commun password
 		// this password need to be updated just after first installation
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash("admin", salt, function(err, hash) {
-				client.query("INSERT INTO utilisateur(username, password)"
-							+ " VALUES ($1,$2)", ["admin",hash], function (err, result) {
+				client.query("INSERT INTO utilisateur(username, password, role)"
+							+ " VALUES ($1,$2, 'admin'::UTILISATEUR_ROLE)", ["admin",hash], function (err, result) {
 								
 					if ( handleError(err) ) return;
 					
@@ -237,7 +345,9 @@ exports.addUser = function(req, res) {
 	});
 };
 
-
+/**
+ * POST new News
+ */
 exports.addNews = function(req, res) {
 
 	var title = req.body.title;
@@ -263,6 +373,28 @@ exports.addNews = function(req, res) {
 };
 
 /**
+ * POST new offer
+ */
+exports.addOffer = function(req, res) {
+
+};
+
+/**
+ * POST new request
+ */
+exports.addRequest = function(req, res) {
+
+};
+
+/**
+ * POST new transaction
+ */
+exports.addTransaction = function(req, res) {
+
+}; 
+
+
+/**
  * POST login user
  */
 exports.loginUser = function(req, res) {
@@ -279,12 +411,14 @@ exports.loginUser = function(req, res) {
 			return true;
 		};
 		
-		client.query("SELECT password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
+		client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
 			if ( handleError(err) ) return;
 			done(client);
 			
+			var user_id = result.row[0].id;
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
 				if ( result == true ) {
+					req.session.user_id = user_id;
 					req.session.authenticated = true;
 					res.redirect('/');
 				}

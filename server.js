@@ -97,11 +97,17 @@ var SampleApp = function() {
 		self.app.get('/news', self.restrict, routes.news);
 		self.app.get('/news/new', self.restrict, routes.newNews);
 		self.app.get('/databaseReset', self.restrict, routes.databaseReset);
+		self.app.get('/offer/new', self.restrict, routes.addOfferForm);
+		self.app.get('/request/new', self.restrict, routes.addRequestForm);
+		self.app.get('/transaction/new', self.restrict, routes.addTransactionForm);
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
 		self.app.post('/users/new', self.restrict, routes.addUser);
 		self.app.post('/news/new', self.restrict, routes.addNews);
+		self.app.post('/offer/new', self.restrict, routes.addOffer);
+		self.app.post('/request/new', self.restrict, routes.addRequest);
+		self.app.post('/transaction/new', self.restrict, routes.addTransaction);
 		
     };
 

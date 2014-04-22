@@ -1,6 +1,9 @@
 ﻿extends ../layout
 
 block content
+
+	a(href='/administration') Retour
+	
 	h2 Création d'un nouvel utilisateur
 	p 
 		form(method='post', action='/users/new', id='add-user-form')

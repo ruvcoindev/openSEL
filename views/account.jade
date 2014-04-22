@@ -2,8 +2,35 @@
 
 block content
 	h2 Détail de votre compte
-	p
+	ul
+		li Nom : #{user.username}
+		li Role : #{user.role}
+		li Credit : #{user.credit}
+		li Date de création : #{user.creation_date}
 		
-
 	h2 Modifier des informations
 	p 
+	
+	h2 Vos offres
+	if user.services
+		ul
+		- each service in user.services
+			if service.type = 'offer'
+				li #{service.title} - #{service.description}
+		ul
+	a(href="/offer/new") Ajouter une offre
+	
+	h2 Vos demandes
+	if user.services
+		ul
+		- each service in user.services
+			if service.type = 'request'
+				li #{service.title} - #{service.description}
+		ul
+	a(href="/request/new") Ajouter une demande
+	
+	h2 Vos transactions
+	if user.transactions
+		ul
+		- each transaction in user.transactions
+	a(href="/transaction/new") Enregistrer une transaction
