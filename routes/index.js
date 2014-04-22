@@ -74,7 +74,7 @@ exports.account = function(req, res) {
 			
 			done(client);
 			res.setHeader('Content-Type','text/html');
-			res.render('account',[ user: result.rows[0]]);
+			res.render('account',{ user: result.rows[0]});
 		});
 	});
 };
