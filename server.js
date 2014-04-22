@@ -94,11 +94,14 @@ var SampleApp = function() {
 		self.app.get('/administration', self.restrict, routes.administration);
 		self.app.get('/users', self.restrict, routes.users);
 		self.app.get('/users/new', self.restrict, routes.newUser);
+		self.app.get('/news', self.restrict, routes.news);
+		self.app.get('/news/new', self.restrict, routes.newNews);
 		self.app.get('/databaseReset', self.restrict, routes.databaseReset);
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
 		self.app.post('/users/new', self.restrict, routes.addUser);
+		self.app.post('/news/new', self.restrict, routes.addNews);
 		
     };
 

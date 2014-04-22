@@ -103,6 +103,39 @@ exports.newUser = function(req, res) {
 };
 
 /**
+ * GET news list
+ */
+exports.news = function(req, res) {
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id, title, content, creation_date FROM nouvelles ORDER BY creation_date DESC", function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('news',{ news: result.rows });
+		});
+	});
+};
+
+/**
+ * GET new news
+ * for get the new news formulaire
+ */
+exports.newNews = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('news/new');
+};
+
+/**
  * GET databaseReset
  * for reset the database
  */
@@ -204,6 +237,30 @@ exports.addUser = function(req, res) {
 	});
 };
 
+
+exports.addNews = function(req, res) {
+
+	var title = req.body.title;
+	var password = req.body.password;
+	
+	pg.connect(databaseURL, function(err, client, done) {
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("INSERT INTO nouvelles(title, content)"
+					+ " VALUES($1,$2)", [title, content], function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.redirect('/news');
+		});
+	});
+};
 
 /**
  * POST login user

@@ -1,0 +1,14 @@
+﻿extends ../layout
+
+block content
+	h2 Création d'un nouvelle
+	p 
+		form(method='post', action='/news/new', id='add-news-form')
+			.form-group
+				label(for='title') Le titre
+				input(type='text', name='title', class='form-control', id='title', placeholder='Entrez le titre de votre nouvelle')
+			.form-group
+				label(for='password') Le contenu
+				input(type='textarea', name='content', class='form-control', id='content', placeholder='Entrez le contenu de votre nouvelle')
+			.form-group
+				button.btn.btn-default Créer la nouvelle

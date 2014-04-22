@@ -1,0 +1,10 @@
+﻿extends ../layout
+
+block content
+
+	h2 Liste des nouvelles
+	if news
+		ul
+		- each new in news
+			li #{new.id} - #{new.title}
+		ul
