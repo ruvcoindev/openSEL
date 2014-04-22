@@ -68,7 +68,8 @@ exports.account = function(req, res) {
 					+ " FROM utilisateur "
 					+ " LEFT JOIN service ON service.user_id = utilisateur.id "
 					+ " LEFT JOIN transaction ON ( transaction.from_user_id = utilisateur.id OR transaction.to_user_id = utilisateur.id)"
-					+ " WHERE utilisateur.id = $1 LIMIT 1", [req.session.user_id],  function(err, result) {
+					+ " WHERE utilisateur.id = $1"
+					+ " GROUP BY utilisateur.id LIMIT 1", [req.session.user_id],  function(err, result) {
 		
 			if ( handleError(err) ) return;
 			
