@@ -9,14 +9,15 @@ html
 				
 		nav
 			ul(id="menu")
-				if authenticated
-					li: a(href="/logout") Déconnection
-				else
-					li: a(href="/login") Se connecter
+				li: a(href="/") Accueil
 				if authenticated
 					li: a(href="/compte") Mon compte
 					li: a(href="/catalogue") Le catalogue
 					li: a(href="/administration") Administration
+				if authenticated
+					li: a(href="/logout") Déconnection
+				else
+					li: a(href="/login") Se connecter
 
 		#contenu
 			if flash

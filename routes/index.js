@@ -58,25 +58,49 @@ exports.account = function(req, res) {
 			return true;
 		};
 				
-		client.query("SELECT utilisateur.id"
-					+ ", utilisateur.username"
-					+ ", utilisateur.role"
-					+ ", utilisateur.credit"
-					+ ", utilisateur.creation_date"
-					+ ", service as services"
-					+ ", transaction as transactions"
+		client.query("SELECT id"
+					+ ", username"
+					+ ", role"
+					+ ", credit"
+					+ ", creation_date"
 					+ " FROM utilisateur "
-					+ " LEFT JOIN service ON (service.user_id = utilisateur.id)"
-					+ " LEFT JOIN transaction ON (transaction.from_user_id = utilisateur.id"
-					+ "		OR transaction.to_user_id = utilisateur.id)"
-					+ " WHERE utilisateur.id = $1"
-					+ " LIMIT 1", [req.session.user_id],  function(err, result) {
-		
+					+ " WHERE id = $1"
+					+ " LIMIT 1", [req.session.user_id], function(err, result) {
 			if ( handleError(err) ) return;
-			var user = result.rows[0];				
-			done(client);
-			res.setHeader('Content-Type','text/html');
-			res.render('account',{ user: user});			
+			var user = result.rows[0];		
+			
+			client.query("SELECT id"
+					+ ", title"
+					+ ", description"
+					+ ", creation_date"
+					+ ", type"
+					+ " FROM service"
+					+ " WHERE user_id = $1", [req.session.user_id], function(err, result) {
+				if ( handleError(err) ) return;
+				user.services = result.rows;
+				
+				client.query("SELECT id"
+						+ ", count"
+						+ ", from_user_id"
+						+ ", to_user_id"
+						+ ", date"
+						+ " FROM transaction"
+						+ " WHERE to_user_id = $1"
+						+ "    OR from_user_id = $1"
+						+ " ORDER BY date DESC", [req.session.user_id], function(err, result) {
+					if ( handleError(err) ) return;
+					user.transactions = result.rows;
+					
+					done(client);
+					res.setHeader('Content-Type','text/html');
+					res.render('account',{ user: user});			
+				});
+			});
+		});
+		
+			
+			
+			
 		});
 	});
 };
