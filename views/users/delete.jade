@@ -1,0 +1,11 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Suppression d'un utilisateur
+	p 
+		form(method='post', action='/users/' + user_id + '/delete', id='delete-user-form')
+			.form-group
+				button.btn.btn-default Supprimer l'utilisateur

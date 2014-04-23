@@ -11,7 +11,7 @@ html
 			ul(id="menu")
 				li: a(href="/") Accueil
 				if authenticated
-					li: a(href="/compte") Mon compte
+					li: a(href="/users/" + user_id) Mon compte
 					li: a(href="/catalogue") Le catalogue
 					li: a(href="/administration") Administration
 				if authenticated

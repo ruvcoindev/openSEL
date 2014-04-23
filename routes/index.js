@@ -3,6 +3,413 @@ var databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 var pg = require('pg');
 var bcrypt = require('bcrypt');
 
+
+/** ================
+ * USER ROUTES
+ */
+ 
+
+/**
+ * GET users
+ * for get the user list
+ */
+exports.users = function(req, res) {
+	// get a pg client from the connection pool
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id, username FROM utilisateur", function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('users',{ users: result.rows });
+		});
+	});
+};
+
+/**
+ * GET user detail page
+ */
+exports.detailUser = function(req, res) {
+
+	var user_id = req.params.id;
+	
+	if ( user_id == req.session.user_id ) {
+	
+		pg.connect(databaseURL, function(err, client, done) {
+
+			var handleError = function(err) {
+				if (!err) return false;
+				done(client);
+				res.setHeader('Content-Type', 'text/html');
+				res.render('index');
+				return true;
+			};
+					
+			client.query("SELECT id"
+						+ ", username"
+						+ ", role"
+						+ ", credit"
+						+ ", creation_date"
+						+ " FROM utilisateur "
+						+ " WHERE id = $1"
+						+ " LIMIT 1", [user_id], function(err, result) {
+				if ( handleError(err) ) return;
+				var user = result.rows[0];		
+				
+				client.query("SELECT id"
+						+ ", title"
+						+ ", description"
+						+ ", creation_date"
+						+ ", type"
+						+ " FROM service"
+						+ " WHERE user_id = $1", [user_id], function(err, result) {
+					if ( handleError(err) ) return;
+					user.services = result.rows;
+					
+					client.query("SELECT id"
+							+ ", count"
+							+ ", from_user_id"
+							+ ", to_user_id"
+							+ ", date"
+							+ " FROM transaction"
+							+ " WHERE to_user_id = $1"
+							+ "    OR from_user_id = $1"
+							+ " ORDER BY date DESC", [user_id], function(err, result) {
+						if ( handleError(err) ) return;
+						user.transactions = result.rows;
+						
+						done(client);
+						res.setHeader('Content-Type','text/html');
+						res.render('users/detail',{ user: user});			
+					});
+				});
+			});
+		});
+	}
+	else {
+		res.setHeader('Content-Type','text/html');
+		res.render('users/detail');
+	}
+};
+
+/**
+ * GET delete user Form
+ */
+exports.deleteUserForm = function(req, res) {
+	var user_id = req.params.id;
+	res.setHeader('Content-Type','text/html');
+	res.render('users/delete', {user_id: user_id});
+};
+
+/**
+ * GET update user Form
+ */
+exports.updateUserForm = function(req, res) {
+	var user_id = req.params.id;
+	res.setHeader('Content-Type','text/html');
+	res.render('users/update', {user_id: user_id});
+};
+
+/**
+ * GET add user Form
+ * for get the new user formulaire
+ */
+exports.addUserForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('users/add');
+};
+
+/**
+ * POST new user
+ */
+exports.addUser = function(req, res) {
+	var username = req.body.username;
+	var password = req.body.password;
+	
+	// get a pg client from the connection pool
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		bcrypt.genSalt(10, function(err, salt) {
+			bcrypt.hash(password, salt, function(err, hash) {
+				client.query("INSERT INTO utilisateur(username, password)"
+							+ " VALUES($1, $2)", [username, hash], function(err, result) {
+							
+					if ( handleError(err) ) return;
+					
+					done(client);
+					flash.type = 'alert-info';
+					flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
+					res.render('/administration', { flash: flash });
+				});						
+			});
+		});
+	});
+};
+
+/**
+ * POST delete user
+ */
+exports.deleteUser = function(req, res) {
+	var user_id = req.params.id;
+	
+	flash.type = 'alert-info';
+	flash.messages = [{ msg: 'Cette fonctionnalité n\'est pas encore implémentée.' }];
+
+	res.setHeader('Content-Type','text/html');
+	res.render('administration', { flash: flash });
+};
+
+
+/**
+ * POST update user
+ */
+exports.updateUser = function(req, res) {
+	var user_id = req.params.id;
+	
+	flash.type = 'alert-info';
+	flash.messages = [{ msg: 'Cette fonctionnalité n\'est pas encore implémentée.' }];
+	
+	res.setHeader('Content-Type','text/html');
+	res.render('administration', { flash: flash });
+};
+
+/** ================
+ * NEWS ROUTES
+ */
+ 
+/**
+ * GET news list
+ */
+exports.news = function(req, res) {
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id"
+					+ ", title"
+					+ ", content"
+					+ ", creation_date"
+					+ " FROM nouvelles"
+					+ " ORDER BY creation_date DESC", function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('news',{ news: result.rows });
+		});
+	});
+};
+
+/**
+ * GET info news
+ */
+exports.infoNews = function(req, res) {
+	var news_id = req.params.id;
+	
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id"
+					+ ", title"
+					+ ", content"
+					+ ", creation_date"
+					+ " FROM nouvelles"
+					+ " WHERE id = $1"
+					+ " LIMIT 1", [news_id],function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.setHeader('Content-Type','text/html');
+			res.render('news/info',{ news: result.rows[0] });
+		});
+	});
+}
+
+/**
+ * GET add news form
+ * for get the new news formulaire
+ */
+exports.addNewsForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('news/add');
+};
+
+/**
+ * GET delete news form
+ */
+exports.deleteNewsForm = function(req, res) {
+	var news_id = req.params.id;
+	res.setHeader('Content-Type','text/html');
+	res.render('news/delete', {news_id: news_id});
+};
+
+/**
+ * GET update news form
+ */
+exports.updateNewsForm = function(req, res) {
+	var news_id = req.params.id;
+	res.setHeader('Content-Type','text/html');
+	res.render('news/update', {news_id: news_id});
+};
+
+/**
+ * POST add News
+ */
+exports.addNews = function(req, res) {
+
+	var title = req.body.title;
+	var content = req.body.content;
+	
+	pg.connect(databaseURL, function(err, client, done) {
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("INSERT INTO nouvelles(title, content)"
+					+ " VALUES($1,$2)", [title, content], function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.redirect('/news');
+		});
+	});
+};
+
+/**
+ * POST delete News
+ */
+exports.deleteNews = function(req, res) {
+	var news_id = req.body.news_id;
+
+	pg.connect(databaseURL, function(err, client, done) {
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("DELETE FROM nouvelles"
+					+ " WHERE id = $1", [news_id], function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.redirect('/news');
+		});
+	});
+};
+
+
+/** 
+ * POST update News
+ */
+ exports.updateNews = function(req, res) {
+	var news_id = req.body.news_id;
+	var title = req.body.title;
+	var content = req.body.content;
+	
+	pg.connect(databaseURL, function(err, client, done) {
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("UPDATE nouvelles SET"
+					+ " title = $1"
+					+ ", content = $2"
+					+ ", update_date = NOW()"
+					+ " WHERE id = $3", [title, content, news_id], function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);
+			res.redirect('/news');
+		});
+	});
+ };
+
+/** ================
+ * SERVICES ROUTES
+ */
+
+/**
+ * GET services list page
+ */
+exports.services = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('services');
+};
+
+/**
+ * GET new offer form
+ */
+exports.addOfferForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('service/new_offer');
+};
+
+/**
+ * GET new request form
+ */
+exports.addRequestForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('service/new_request');
+};
+
+/** ================
+ * TRANSACTIONS ROUTES
+ */
+
+/**
+ * GET new transaction form
+ */
+exports.addTransactionForm = function(req, res) {
+	res.setHeader('Content-Type','text/html');
+	res.render('transaction/new');
+}; 
+
+
+/** ================
+ * OTHER ROUTES
+ */
+
 /**
  * GET home page
  */
@@ -42,72 +449,8 @@ exports.logout = function(req, res) {
 	req.session.destroy();
 	res.redirect('/');
 };
-
-/**
- * GET account page
- */
-exports.account = function(req, res) {
-
-	pg.connect(databaseURL, function(err, client, done) {
-
-		var handleError = function(err) {
-			if (!err) return false;
-			done(client);
-			res.setHeader('Content-Type', 'text/html');
-			res.render('index');
-			return true;
-		};
-				
-		client.query("SELECT id"
-					+ ", username"
-					+ ", role"
-					+ ", credit"
-					+ ", creation_date"
-					+ " FROM utilisateur "
-					+ " WHERE id = $1"
-					+ " LIMIT 1", [req.session.user_id], function(err, result) {
-			if ( handleError(err) ) return;
-			var user = result.rows[0];		
-			
-			client.query("SELECT id"
-					+ ", title"
-					+ ", description"
-					+ ", creation_date"
-					+ ", type"
-					+ " FROM service"
-					+ " WHERE user_id = $1", [req.session.user_id], function(err, result) {
-				if ( handleError(err) ) return;
-				user.services = result.rows;
-				
-				client.query("SELECT id"
-						+ ", count"
-						+ ", from_user_id"
-						+ ", to_user_id"
-						+ ", date"
-						+ " FROM transaction"
-						+ " WHERE to_user_id = $1"
-						+ "    OR from_user_id = $1"
-						+ " ORDER BY date DESC", [req.session.user_id], function(err, result) {
-					if ( handleError(err) ) return;
-					user.transactions = result.rows;
-					
-					done(client);
-					res.setHeader('Content-Type','text/html');
-					res.render('account',{ user: user});			
-				});
-			});
-		});
-	});
-};
-
-/**
- * GET services list page
- */
-exports.services = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('services');
-};
-
+ 
+ 
 /**
  * GET administration
  */
@@ -116,99 +459,7 @@ exports.administration = function(req, res) {
 	res.render('administration');
 };
 
-/**
- * GET users
- * for get the user list
- */
-exports.users = function(req, res) {
-	// get a pg client from the connection pool
-	pg.connect(databaseURL, function(err, client, done) {
-	
-		var handleError = function(err) {
-			if (!err) return false;
-			done(client);
-			res.writeHead(500 , {'content(type': 'text/html'});
-			res.end('An error occurred');
-			return true;
-		};
-		
-		client.query("SELECT id, username FROM utilisateur", function(err, result) {
-			if ( handleError(err) ) return;
-			
-			done(client);
-			res.setHeader('Content-Type','text/html');
-			res.render('users',{ users: result.rows });
-		});
-	});
-};
-
-/**
- * GET new user
- * for get the new user formulaire
- */
-exports.newUser = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('users/new');
-};
-
-/**
- * GET news list
- */
-exports.news = function(req, res) {
-	pg.connect(databaseURL, function(err, client, done) {
-	
-		var handleError = function(err) {
-			if (!err) return false;
-			done(client);
-			res.writeHead(500 , {'content(type': 'text/html'});
-			res.end('An error occurred');
-			return true;
-		};
-		
-		client.query("SELECT id, title, content, creation_date FROM nouvelles ORDER BY creation_date DESC", function(err, result) {
-			if ( handleError(err) ) return;
-			
-			done(client);
-			res.setHeader('Content-Type','text/html');
-			res.render('news',{ news: result.rows });
-		});
-	});
-};
-
-/**
- * GET new news
- * for get the new news formulaire
- */
-exports.newNews = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('news/new');
-};
-
-/**
- * GET new offer form
- */
-exports.addOfferForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('service/new_offer');
-};
-
-/**
- * GET new request form
- */
-exports.addRequestForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('service/new_request');
-};
-
-/**
- * GET new transaction form
- */
-exports.addTransactionForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
-	res.render('transaction/new');
-}; 
-
-
+ 
 /**
  * GET databaseReset
  * for reset the database
@@ -324,69 +575,6 @@ exports.databaseReset = function(req, res) {
 					res.render('administration', { flash: flash });						
 				});
 			});
-		});
-	});
-};
-
-/**
- * POST new user
- */
-exports.addUser = function(req, res) {
-
-	var username = req.body.username;
-	var password = req.body.password;
-	
-	// get a pg client from the connection pool
-	pg.connect(databaseURL, function(err, client, done) {
-	
-		var handleError = function(err) {
-			if (!err) return false;
-			done(client);
-			res.writeHead(500 , {'content(type': 'text/html'});
-			res.end('An error occurred');
-			return true;
-		};
-		
-		bcrypt.genSalt(10, function(err, salt) {
-			bcrypt.hash(password, salt, function(err, hash) {
-				client.query("INSERT INTO utilisateur(username, password)"
-							+ " VALUES($1, $2)", [username, hash], function(err, result) {
-							
-					if ( handleError(err) ) return;
-					
-					done(client);
-					flash.type = 'alert-info';
-					flash.messages = [{ msg: 'Le nouvel utilisateur a été enregistré.' }];
-					res.render('administration', { flash: flash });
-				});						
-			});
-		});
-	});
-};
-
-/**
- * POST new News
- */
-exports.addNews = function(req, res) {
-
-	var title = req.body.title;
-	var content = req.body.content;
-	
-	pg.connect(databaseURL, function(err, client, done) {
-		var handleError = function(err) {
-			if (!err) return false;
-			done(client);
-			res.writeHead(500 , {'content(type': 'text/html'});
-			res.end('An error occurred');
-			return true;
-		};
-		
-		client.query("INSERT INTO nouvelles(title, content)"
-					+ " VALUES($1,$2)", [title, content], function(err, result) {
-			if ( handleError(err) ) return;
-			
-			done(client);
-			res.redirect('/news');
 		});
 	});
 };

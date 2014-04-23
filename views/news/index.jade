@@ -11,7 +11,7 @@ block content
 				tr
 					th Identifiant
 					th Titre
-					th Date de créatin
+					th Date de création
 			tbody
 			- each nouvelle in news
 				tr
@@ -19,7 +19,7 @@ block content
 					td #{nouvelle.title}
 					td #{nouvelle.creation_date}
 					td
-						a(href='/news/'+ nouvelle.id) Détail
+						a(href='/news/'+ nouvelle.id + '/update') Modifier
 					td
 						a(href='/news/'+ nouvelle.id + '/delete') Supprimer
 			tbody

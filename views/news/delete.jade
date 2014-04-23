@@ -1,0 +1,11 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Suppression d'une nouvelle
+	p 
+		form(method='post', action='/news/' + news_id + '/delete', id='delete-news-form')
+			.form-group
+				button.btn.btn-default Supprimer la nouvelle

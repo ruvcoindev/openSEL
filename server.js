@@ -85,17 +85,40 @@ var SampleApp = function() {
      */
     self.createRoutes = function() {
 	
-		// GET
+		// Public routes
 		self.app.get('/', routes.index);
 		self.app.get('/login', routes.login);
-		self.app.get('/logout', routes.logout);
-		self.app.get('/compte', self.restrict, routes.account);
+		
+		// Restricted routes
+		self.app.get('/logout', self.restrict, routes.logout);
 		self.app.get('/catalogue', self.restrict, routes.services);
 		self.app.get('/administration', self.restrict, routes.administration);
+		
+		// User GET routes
 		self.app.get('/users', self.restrict, routes.users);
-		self.app.get('/users/new', self.restrict, routes.newUser);
+		self.app.get('/users/:id', self.restrict, routes.detailUser);
+		self.app.get('/users/:id/delete', self.restrict, routes.deleteUserForm);
+		self.app.get('/users/:id/update', self.restrict, routes.updateUserForm);
+		self.app.get('/users/add', self.restrict, routes.addUserForm);
+
+		// User POST routes
+		self.app.post('/users/add', self.restrict, routes.addUser);
+		self.app.post('/users/:id/delete', self.restrict, routes.deleteUser);
+		self.app.post('/users/:id/update', self.restrict, routes.updateUser);
+		
+		// News GET routes
 		self.app.get('/news', self.restrict, routes.news);
-		self.app.get('/news/new', self.restrict, routes.newNews);
+		self.app.get('/news/:id', self.restrict, routes.detailNews);
+		self.app.get('/news/:id/delete', self.restrict, routes.deleteNewsForm);
+		self.app.get('/news/:id/update', self.restrict, routes.updateNewsForm);
+		self.app.get('/news/add', self.restrict, routes.addNewsForm);
+				
+		// News POST routes
+		self.app.post('/news/add', self.restrict, routes.addNews);
+		self.app.post('/news/:id/delete', self.restrict, routes.deleteNews);
+		self.app.post('/news/:id/update', self.restrict, routes.updateNews);
+		
+		
 		self.app.get('/databaseReset', self.restrict, routes.databaseReset);
 		self.app.get('/offer/new', self.restrict, routes.addOfferForm);
 		self.app.get('/request/new', self.restrict, routes.addRequestForm);
@@ -103,8 +126,6 @@ var SampleApp = function() {
 		
 		// POST
 		self.app.post('/login', routes.loginUser);
-		self.app.post('/users/new', self.restrict, routes.addUser);
-		self.app.post('/news/new', self.restrict, routes.addNews);
 		self.app.post('/offer/new', self.restrict, routes.addOffer);
 		self.app.post('/request/new', self.restrict, routes.addRequest);
 		self.app.post('/transaction/new', self.restrict, routes.addTransaction);
@@ -142,6 +163,7 @@ var SampleApp = function() {
 			if (msg) res.locals.message = msg;
 			
 			res.locals.authenticated = req.session.authenticated;
+			res.locals.user_id = req.session.user_id;
 			next();
 		});
 		
