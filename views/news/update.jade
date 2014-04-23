@@ -6,12 +6,12 @@ block content
 	
 	h2 Modification d'une nouvelle
 	p 
-		form(method='post', action='/news/' + news_id + '/update', id='update-news-form')
+		form(method='post', action='/news/' + news.id + '/update', id='update-news-form')
 			.form-group
 				label(for='title') Le titre
-				input(type='text', name='title', class='form-control', id='title', placeholder='Entrez le titre de votre nouvelle')
+				input(type='text', value=news.title name='title', class='form-control', id='title', placeholder='Entrez le titre de votre nouvelle')
 			.form-group
 				label(for='password') Le contenu
-				textarea(name='content', class='form-control', id='content', placeholder='Entrez le contenu de votre nouvelle')
+				textarea(name='content', value=news.content class='form-control', id='content', placeholder='Entrez le contenu de votre nouvelle')
 			.form-group
 				button.btn.btn-default Modifier la nouvelle

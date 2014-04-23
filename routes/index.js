@@ -278,8 +278,31 @@ exports.deleteNewsForm = function(req, res) {
  */
 exports.updateNewsForm = function(req, res) {
 	var news_id = req.params.id;
-	res.setHeader('Content-Type','text/html');
-	res.render('news/update', {news_id: news_id});
+	
+	pg.connect(databaseURL, function(err, client, done) {
+	
+		var handleError = function(err) {
+			if (!err) return false;
+			done(client);
+			res.writeHead(500 , {'content(type': 'text/html'});
+			res.end('An error occurred');
+			return true;
+		};
+		
+		client.query("SELECT id"
+					+ ", title"
+					+ ", content"
+					+ ", creation_date"
+					+ " FROM nouvelles"
+					+ " WHERE id = $1"
+					+ " LIMIT 1", [news_id],function(err, result) {
+			if ( handleError(err) ) return;
+			
+			done(client);			
+			res.setHeader('Content-Type','text/html');
+			res.render('news/update', { news: result.rows[0] });
+		});
+	});
 };
 
 /**
@@ -339,7 +362,7 @@ exports.deleteNews = function(req, res) {
  * POST update News
  */
  exports.updateNews = function(req, res) {
-	var news_id = req.body.news_id;
+	var news_id = req.params.id;
 	var title = req.body.title;
 	var content = req.body.content;
 	
