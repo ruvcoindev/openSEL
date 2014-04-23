@@ -370,7 +370,7 @@ exports.addUser = function(req, res) {
 exports.addNews = function(req, res) {
 
 	var title = req.body.title;
-	var content = (req.body.content;
+	var content = req.body.content;
 	
 	pg.connect(databaseURL, function(err, client, done) {
 		var handleError = function(err) {
