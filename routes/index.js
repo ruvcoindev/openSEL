@@ -97,11 +97,6 @@ exports.account = function(req, res) {
 				});
 			});
 		});
-		
-			
-			
-			
-		});
 	});
 };
 
