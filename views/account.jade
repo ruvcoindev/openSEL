@@ -33,4 +33,6 @@ block content
 	if user.transactions
 		ul
 		- each transaction in user.transactions
+			li #{transaction.id} - #{transaction.cost}
+		ul
 	a(href="/transaction/new") Enregistrer une transaction
