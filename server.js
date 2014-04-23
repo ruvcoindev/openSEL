@@ -85,8 +85,22 @@ var SampleApp = function() {
      */
     self.createRoutes = function() {
 	
-		//self.app.param('id', /^\d+$/);
+		self.app.param(function(name, fn){
+		  if (fn instanceof RegExp) {
+			return function(req, res, next, val){
+			  var captures;
+			  if (captures = fn.exec(String(val))) {
+				req.params[name] = captures;
+				next();
+			  } else {
+				next('route');
+			  }
+			}
+		  }
+		});
 	
+		self.app.param('id', /^\d+$/);
+			
 		// Public routes
 		self.app.get('/', routes.index);
 		self.app.get('/login', routes.login);
