@@ -63,19 +63,20 @@ exports.account = function(req, res) {
 					+ ", utilisateur.role"
 					+ ", utilisateur.credit"
 					+ ", utilisateur.creation_date"
-					+ ", array_agg(transaction.*) as transactions"
-					+ ", array_agg(service.*) as services"
+					+ ", service"
+					+ ", transaction"
 					+ " FROM utilisateur "
-					+ " LEFT JOIN service ON service.user_id = utilisateur.id "
-					+ " LEFT JOIN transaction ON ( transaction.from_user_id = utilisateur.id OR transaction.to_user_id = utilisateur.id)"
+					+ " LEFT JOIN service ON (service.user_id = utilisateur.id)"
+					+ " LEFT JOIN transaction ON (transaction.from_user_id = utilisateur.id"
+					+ "		OR transaction.to_user_id = utilisateur.id)"
 					+ " WHERE utilisateur.id = $1"
-					+ " GROUP BY utilisateur.id LIMIT 1", [req.session.user_id],  function(err, result) {
+					+ " LIMIT 1", [req.session.user_id],  function(err, result) {
 		
 			if ( handleError(err) ) return;
-			
+			var user = result.rows[0];				
 			done(client);
 			res.setHeader('Content-Type','text/html');
-			res.render('account',{ user: result.rows[0]});
+			res.render('account',{ user: user});			
 		});
 	});
 };
