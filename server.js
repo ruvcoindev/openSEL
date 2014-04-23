@@ -85,7 +85,7 @@ var SampleApp = function() {
      */
     self.createRoutes = function() {
 	
-		self.app.param('id', /^\d+$/);
+		//self.app.param('id', /^\d+$/);
 	
 		// Public routes
 		self.app.get('/', routes.index);
