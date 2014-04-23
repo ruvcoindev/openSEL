@@ -136,12 +136,30 @@ pre span.comment
     color: #b30000 ;
 }
 
+form
+{
+	background-color: #f0ffc3;
+	padding: 10px;
+}
+
 div.form-group
 {
-	height: 30px;
 }
 
 div.form-group label 
 {
-	width: 120px;
+	display: block;
+	width: 150px;
+	float: left;
+}
+
+div.form-group input[type=text], div.form-group input[type=password]
+{
+	width: 200px;
+}
+
+div.form-group textarea
+{
+	width: 400px;
+	height: 300px;
 }
