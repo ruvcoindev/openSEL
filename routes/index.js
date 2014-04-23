@@ -40,7 +40,7 @@ exports.users = function(req, res) {
  */
 exports.detailUser = function(req, res) {
 
-	var user_id = req.params.id;
+	var user_id = parseInt(req.params.id);
 	
 	if ( user_id == req.session.user_id ) {
 	
@@ -105,7 +105,7 @@ exports.detailUser = function(req, res) {
  * GET delete user Form
  */
 exports.deleteUserForm = function(req, res) {
-	var user_id = req.params.id;
+	var user_id = parseInt(req.params.id);
 	res.setHeader('Content-Type','text/html');
 	res.render('users/delete', {user_id: user_id});
 };
@@ -114,7 +114,7 @@ exports.deleteUserForm = function(req, res) {
  * GET update user Form
  */
 exports.updateUserForm = function(req, res) {
-	var user_id = req.params.id;
+	var user_id = parseInt(req.params.id);
 	res.setHeader('Content-Type','text/html');
 	res.render('users/update', {user_id: user_id});
 };
@@ -167,7 +167,7 @@ exports.addUser = function(req, res) {
  * POST delete user
  */
 exports.deleteUser = function(req, res) {
-	var user_id = req.params.id;
+	var user_id = parseInt(req.params.id);
 	
 	flash.type = 'alert-info';
 	flash.messages = [{ msg: 'Cette fonctionnalité n\'est pas encore implémentée.' }];
@@ -181,7 +181,7 @@ exports.deleteUser = function(req, res) {
  * POST update user
  */
 exports.updateUser = function(req, res) {
-	var user_id = req.params.id;
+	var user_id = parseInt(req.params.id);
 	
 	flash.type = 'alert-info';
 	flash.messages = [{ msg: 'Cette fonctionnalité n\'est pas encore implémentée.' }];
@@ -228,7 +228,7 @@ exports.news = function(req, res) {
  * GET info news
  */
 exports.detailNews = function(req, res) {
-	var news_id = req.params.id;
+	var news_id = parseInt(req.params.id);
 	
 	pg.connect(databaseURL, function(err, client, done) {
 	
@@ -270,7 +270,7 @@ exports.addNewsForm = function(req, res) {
  * GET delete news form
  */
 exports.deleteNewsForm = function(req, res) {
-	var news_id = req.params.id;
+	var news_id = parseInt(req.params.id);
 	res.setHeader('Content-Type','text/html');
 	res.render('news/delete', {news_id: news_id});
 };
@@ -279,7 +279,7 @@ exports.deleteNewsForm = function(req, res) {
  * GET update news form
  */
 exports.updateNewsForm = function(req, res) {
-	var news_id = req.params.id;
+	var news_id = parseInt(req.params.id);
 	
 	pg.connect(databaseURL, function(err, client, done) {
 	
@@ -339,7 +339,7 @@ exports.addNews = function(req, res) {
  * POST delete News
  */
 exports.deleteNews = function(req, res) {
-	var news_id = req.params.id;
+	var news_id = parseInt(req.params.id);
 
 	pg.connect(databaseURL, function(err, client, done) {
 		var handleError = function(err) {
@@ -365,7 +365,7 @@ exports.deleteNews = function(req, res) {
  * POST update News
  */
  exports.updateNews = function(req, res) {
-	var news_id = req.params.id;
+	var news_id = parseInt(req.params.id);
 	var title = req.body.title;
 	var content = req.body.content;
 	
