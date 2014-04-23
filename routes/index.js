@@ -226,7 +226,7 @@ exports.news = function(req, res) {
 /**
  * GET info news
  */
-exports.infoNews = function(req, res) {
+exports.detailNews = function(req, res) {
 	var news_id = req.params.id;
 	
 	pg.connect(databaseURL, function(err, client, done) {
