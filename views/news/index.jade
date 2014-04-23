@@ -6,7 +6,20 @@ block content
 	
 	h2 Liste des nouvelles
 	if news
-		ul
-		- each nouvelle in news
-			li #{nouvelle.id} - #{nouvelle.title}
-		ul
+		table
+			thead
+				tr
+					th Identifiant
+					th Titre
+					th Date de créatin
+			tbody
+			- each nouvelle in news
+				tr
+					td #{nouvelle.id}
+					td #{nouvelle.title}
+					td #{nouvelle.creation_date}
+					td
+						a(href='/news/'+ #{nouvelle.id}) Détail
+					td
+						a(href='/news/'+ #{nouvelle.id}/delete) Supprimer
+			tbody
