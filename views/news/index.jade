@@ -19,7 +19,7 @@ block content
 					td #{nouvelle.title}
 					td #{nouvelle.creation_date}
 					td
-						a(href='/news/'+ #{nouvelle.id}) Détail
+						a(href='/news/'+ nouvelle.id) Détail
 					td
-						a(href='/news/'+ #{nouvelle.id}+'/delete') Supprimer
+						a(href='/news/'+ nouvelle.id + '/delete') Supprimer
 			tbody
