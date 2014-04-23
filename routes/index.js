@@ -14,7 +14,7 @@ var bcrypt = require('bcrypt');
  * for get the user list
  */
 exports.users = function(req, res) {
-	// get a pg client from the connection pool
+
 	pg.connect(databaseURL, function(err, client, done) {
 	
 		var handleError = function(err) {
@@ -211,7 +211,8 @@ exports.news = function(req, res) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", content"
-					+ ", creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM nouvelles"
 					+ " ORDER BY creation_date DESC", function(err, result) {
 			if ( handleError(err) ) return;
@@ -242,7 +243,8 @@ exports.detailNews = function(req, res) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", content"
-					+ ", creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM nouvelles"
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [news_id],function(err, result) {
@@ -292,7 +294,8 @@ exports.updateNewsForm = function(req, res) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", content"
-					+ ", creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM nouvelles"
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [news_id],function(err, result) {
@@ -336,7 +339,7 @@ exports.addNews = function(req, res) {
  * POST delete News
  */
 exports.deleteNews = function(req, res) {
-	var news_id = req.body.news_id;
+	var news_id = req.params.id;
 
 	pg.connect(databaseURL, function(err, client, done) {
 		var handleError = function(err) {
@@ -545,8 +548,8 @@ exports.databaseReset = function(req, res) {
 						+ "id SERIAL"
 						+ ", title CHARACTER VARYING(32)"
 						+ ", content TEXT"
-						+ ", creation_date DATE DEFAULT NOW()"
-						+ ", update_date DATE DEFAULT NOW()"
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
 			if ( handleError(err) ) return;						
 		});
@@ -557,8 +560,8 @@ exports.databaseReset = function(req, res) {
 						+ ", username CHARACTER VARYING(24)"
 						+ ", role UTILISATEUR_ROLE DEFAULT 'user'::UTILISATEUR_ROLE"
 						+ ", credit INTEGER DEFAULT 0"
-						+ ", creation_date DATE DEFAULT NOW()"
-						+ ", update_date DATE DEFAULT NOW())", function(err) {
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
 			if ( handleError(err) ) return;						
 		});
 		
@@ -568,8 +571,8 @@ exports.databaseReset = function(req, res) {
 						+ ", title CHARACTER VARYING(32)"
 						+ ", description TEXT"
 						+ ", type SERVICE_TYPE DEFAULT 'offer'::SERVICE_TYPE"
-						+ ", creation_date DATE DEFAULT NOW()"
-						+ ", update_date DATE DEFAULT NOW())", function(err) {
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
 			if ( handleError(err) ) return;						
 		});
 		
@@ -578,7 +581,7 @@ exports.databaseReset = function(req, res) {
 						+ ", count INTEGER"
 						+ ", from_user_id INTEGER"
 						+ ", to_user_id INTEGER"
-						+ ", date DATE DEFAULT NOW())", function(err) {
+						+ ", date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
 			if ( handleError(err) ) return;						
 		});
 						

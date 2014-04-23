@@ -12,12 +12,14 @@ block content
 					th Identifiant
 					th Titre
 					th Date de création
+					th Date de modification
 			tbody
 			- each nouvelle in news
 				tr
 					td #{nouvelle.id}
 					td #{nouvelle.title}
 					td #{nouvelle.creation_date}
+					td #{nouvelle.update_date}
 					td
 						a(href='/news/'+ nouvelle.id + '/update') Modifier
 					td

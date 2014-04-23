@@ -12,6 +12,6 @@ block content
 				input(type='text', value=news.title name='title', class='form-control', id='title', placeholder='Entrez le titre de votre nouvelle')
 			.form-group
 				label(for='password') Le contenu
-				textarea(name='content', value=news.content class='form-control', id='content', placeholder='Entrez le contenu de votre nouvelle')
+				textarea(name='content', class='form-control', id='content', placeholder='Entrez le contenu de votre nouvelle') #{news.content}
 			.form-group
 				button.btn.btn-default Modifier la nouvelle
