@@ -168,3 +168,31 @@ table thead
 {
 	background-color: gainsboro;
 }
+
+a#admin_users {
+	width: 256px;
+	height: 256px;
+	display: block;
+	background-image: url('../images/users.png');
+}
+
+a#admin_news {
+	width: 256px;
+	height: 256px;
+	display: block;
+	background-image: url('../images/news.png');
+}
+
+a#admin_database {
+	width: 256px;
+	height: 256px;
+	display: block;
+	background-image: url('../images/database.png');
+}
+
+span.action a {
+	border : 5px solid #fff;
+}
+span.action a:hover {
+	border : 5px solid #eee;
+}
