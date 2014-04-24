@@ -115,6 +115,8 @@ p#footer
     line-height: 30px ;
     text-align: right ;
     color: #8a0 ;
+	clear: both;
+	background-color: #dea;
 }
 
 pre
@@ -176,7 +178,8 @@ div.action {
 }
 
 div.action p {
-	text-align: center;
+    text-align: justify ;
+    text-indent: 0em ;
 }
 
 div.action a {
