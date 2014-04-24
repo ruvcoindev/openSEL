@@ -5,6 +5,7 @@ block content
 	a(href='/administration') Retour
 	
 	h2 Liste des nouvelles
+	a(href="/news/add") Ajouter une nouvelle
 	if news
 		table
 			thead
@@ -17,7 +18,7 @@ block content
 			- each nouvelle in news
 				tr
 					td #{nouvelle.id}
-					td #{nouvelle.title}
+					td a(href='/news/'+nouvelle.id) #{nouvelle.title}
 					td #{nouvelle.creation_date}
 					td #{nouvelle.update_date}
 					td
