@@ -18,7 +18,8 @@ block content
 			- each nouvelle in news
 				tr
 					td #{nouvelle.id}
-					td a(href='/news/'+nouvelle.id) #{nouvelle.title}
+					td 
+						a(href='/news/'+nouvelle.id) #{nouvelle.title}
 					td #{nouvelle.creation_date}
 					td #{nouvelle.update_date}
 					td
