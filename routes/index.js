@@ -252,7 +252,7 @@ exports.detailNews = function(req, res) {
 			
 			done(client);
 			res.setHeader('Content-Type','text/html');
-			res.render('news/detail',{ news: result.rows[0] });
+			res.render('news/detail',{ nouvelle: result.rows[0] });
 		});
 	});
 }

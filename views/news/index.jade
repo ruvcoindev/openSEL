@@ -7,23 +7,25 @@ block content
 	h2 Liste des nouvelles
 	a(href="/news/add") Ajouter une nouvelle
 	if news
-		table
-			thead
-				tr
-					th Identifiant
-					th Titre
-					th Date de création
-					th Date de modification
-			tbody
-			- each nouvelle in news
-				tr
-					td #{nouvelle.id}
-					td 
-						a(href='/news/'+nouvelle.id) #{nouvelle.title}
-					td #{nouvelle.creation_date}
-					td #{nouvelle.update_date}
-					td
-						a(href='/news/'+ nouvelle.id + '/update') Modifier
-					td
-						a(href='/news/'+ nouvelle.id + '/delete') Supprimer
-			tbody
+		p
+			table
+				thead
+					tr
+						th Identifiant
+						th Titre
+						th Date de création
+						th Date de modification
+						th Action
+						
+				tbody
+				- each nouvelle in news
+					tr
+						td #{nouvelle.id}
+						td 
+							a(href='/news/'+nouvelle.id) #{nouvelle.title}
+						td #{nouvelle.creation_date}
+						td #{nouvelle.update_date}
+						td
+							a(href='/news/'+ nouvelle.id + '/update') Modifier
+							a(href='/news/'+ nouvelle.id + '/delete') Supprimer
+				tbody

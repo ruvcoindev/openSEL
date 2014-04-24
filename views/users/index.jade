@@ -7,7 +7,18 @@ block content
 	h2 Liste des utilisateurs
 	a(href="/users/add") Ajouter un utilisateur
 	if users
-		ul
-		- each user in users
-			li #{user.id} - #{user.username}
-		ul
+		p
+			table
+				thead
+					tr
+						th Identifiant
+						th Nom d'utilisateur
+						th Action
+				tbody
+				- each user in users
+					tr
+						td #{user.id}
+						td #{user.username}
+						td
+							a(href='/user/'+ user.id + '/update') Modifier
+							a(href='/user/'+ user.id + '/delete') Supprimer
