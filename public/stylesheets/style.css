@@ -169,30 +169,35 @@ table thead
 	background-color: gainsboro;
 }
 
-a#admin_users {
-	width: 256px;
-	height: 256px;
+div.action {
+	width: 133px;
+	float: left;
+	margin-right: 10px;
+}
+
+div.action p {
+	text-align: center;
+}
+
+div.action a {
+	width: 128px;
+	height: 128px;
 	display: block;
+	border : 5px solid #fff;
+}
+
+div.action a:hover {
+	border : 5px solid #eee;
+}
+
+a#admin_users {
 	background-image: url('../images/users.png');
 }
 
 a#admin_news {
-	width: 256px;
-	height: 256px;
-	display: block;
 	background-image: url('../images/news.png');
 }
 
 a#admin_database {
-	width: 256px;
-	height: 256px;
-	display: block;
 	background-image: url('../images/database.png');
-}
-
-span.action a {
-	border : 5px solid #fff;
-}
-span.action a:hover {
-	border : 5px solid #eee;
 }
