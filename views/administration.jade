@@ -1,12 +1,9 @@
 ﻿extends layout
 
 block content
-	a(href='/users'): img(src='/images/users.png' alt='Modifiers les utilisateurs')
+	a(href='/users'): img(src='/images/users.png' alt='Gestion des utilisateurs') Gestion des utilisateurs
  
-	a(href="/news") Nouvelles
+	a(href="/news"): img(src='/images/news.png' alt='Gestion des nouvelles') Gestion des nouvelles
 
-	h2 Base de données
-	p 
-		nav
-			ul(id="bdd_action")
-				li: a(href="/databaseReset") Créer la base de données
+	a(href="/databaseReset"): img(src='/images/database.png' alt='reinitialiser la base de données') Ré-initialiser la base de données
+				
