@@ -2,30 +2,9 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var News = function() {
+function News() {
 	EventEmitter.call(this);
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
-	
-	/**
-	 * SELECT a list of news from database
-	 * Event error : something is wrong with database
-	 * Event listDone : news was found on database
-	 */
-	this.list = function() {
-		pg.connect(this.databaseURL, function(err, client, done) {
-			client.query("SELECT id"
-						+ ", title"
-						+ ", content"
-						+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
-						+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
-						+ " FROM nouvelles",function(err, result) {
-				done(client);
-				if ( err ) this.emit('error');
-				console.log("emit event listDone");
-				this.emit('listDone', result.rows);
-			});
-		});
-	};
 };
 util.inherits(News, EventEmitter);
 
@@ -85,6 +64,28 @@ News.prototype.select = function(news_id) {
 	});
 };
 
+/**
+ * SELECT a list of news from database
+ * Event error : something is wrong with database
+ * Event listDone : news was found on database
+ */
+News.prototype.list = function() {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		client.query("SELECT id"
+					+ ", title"
+					+ ", content"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
+					+ " FROM nouvelles",function(err, result) {
+			done(client);
+			if ( err ) self.emit('error');
+			console.log("emit event listDone");
+			self.emit('listDone', result.rows);
+		});
+	});
+};
 
 /**
  * INSERT a news on database
