@@ -3,8 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var Services = function() {
-    var self = this;
-	self.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
 util.inherits(Services, EventEmitter);
 
@@ -14,26 +13,26 @@ util.inherits(Services, EventEmitter);
  * Event createDone : services database model is create
  */
 Services.prototype.create = function() {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		
 		client.query("DROP TABLE IF EXISTS services", function(err) {
-			if ( err ) {done(client);self.emit('error');}
+			if ( err ) {done(client);this.emit('error');}
 		});
 
 		client.query("DROP TYPE IF EXISTS SERVICES_TYPE CASCADE", function(err) {
-			if ( err ) {done(client);self.emit('error');}
+			if ( err ) {done(client);this.emit('error');}
 		});
 		
 		client.query("CREATE TYPE SERVICES_TYPE AS ENUM ('offer', 'request')", function(err) {
-			if ( err ) {done(client);self.emit('error');}
+			if ( err ) {done(client);this.emit('error');}
 		});
 		
 		client.query("DROP TYPE IF EXISTS SERVICES_STATUS CASCADE", function(err) {
-			if ( err ) {done(client);self.emit('error');}
+			if ( err ) {done(client);this.emit('error');}
 		});
 		
 		client.query("CREATE TYPE SERVICES_STATUS AS ENUM ('enable', 'disable')", function(err) {
-			if ( err ) {done(client);self.emit('error');}
+			if ( err ) {done(client);this.emit('error');}
 		});
 
 		client.query("CREATE TABLE services( "
@@ -45,8 +44,8 @@ Services.prototype.create = function() {
 						+ ", type SERVICES_TYPE DEFAULT 'offer'::SERVICES_TYPE"
 						+ ", status SERVICES_STATUS DEFAULT 'disable'::SERVICES_STATUS)", function(err) {
 			client(done);
-			if ( err ) self.emit('error');
-			self.emit('createDone');
+			if ( err ) this.emit('error');
+			this.emit('createDone');
 		});
 	});
 }
@@ -57,7 +56,7 @@ Services.prototype.create = function() {
  * Event selectDone : service was found on database
  */
 Services.prototype.select = function(service_id) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", description"
@@ -69,8 +68,8 @@ Services.prototype.select = function(service_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [service_id],function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('selectDone', result.rows[0]);
+			if ( err ) this.emit('error');
+			this.emit('selectDone', result.rows[0]);
 		});
 	});
 };
@@ -81,7 +80,7 @@ Services.prototype.select = function(service_id) {
  * Event listDone : services was found on database
  */
 Services.prototype.list = function() {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", description"
@@ -91,8 +90,8 @@ Services.prototype.list = function() {
 					+ ", status"
 					+ " FROM services", function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('listDone', result.rows);
+			if ( err ) this.emit('error');
+			this.emit('listDone', result.rows);
 		});
 	});
 };
@@ -103,7 +102,7 @@ Services.prototype.list = function() {
  * Event insertDone : services was insert on database
  */
 Services.prototype.insert = function(user_id, type, title, description) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO services("
 					+ " user_id"
 					+ ", type"
@@ -111,8 +110,8 @@ Services.prototype.insert = function(user_id, type, title, description) {
 					+ ", description )"
 					+ " VALUES($1,$2,$3,$4) RETURNING id", [user_id, type, title, description], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('insertDone');
+			if ( err ) this.emit('error');
+			this.emit('insertDone');
 		});
 	});
 };
@@ -123,12 +122,12 @@ Services.prototype.insert = function(user_id, type, title, description) {
  * Event removeDone : service was delete from database
  */
 Services.prototype.remove = function(service_id) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM services"
 					+ " WHERE id = $1", [service_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('removeDone');
+			if ( err ) this.emit('error');
+			this.emit('removeDone');
 		});
 	});
 };
@@ -139,7 +138,7 @@ Services.prototype.remove = function(service_id) {
  * Event updateDone : service was update on database
  */
 Services.prototype.update = function(service_id, type, status, title, description) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		client.query("UPDATE services SET"
 					+ " type = $1"
 					+ " status = $2"
@@ -149,8 +148,8 @@ Services.prototype.update = function(service_id, type, status, title, descriptio
 					+ " WHERE id = $5", [type, status, title, description, service_id], function(err, result) {
 					
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('updateDone');
+			if ( err ) this.emit('error');
+			this.emit('updateDone');
 		});
 	});
 };

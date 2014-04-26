@@ -4,8 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var Users = function() {
-    var self = this;
-	self.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
 
 util.inherits(Users, EventEmitter);
@@ -14,18 +13,18 @@ util.inherits(Users, EventEmitter);
  * Create database model
  */
 Users.prototype.create = function() {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 	
 		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); this.emit('error');}
 		});
 
 		client.query("DROP TYPE IF EXISTS UTILISATEUR_ROLE CASCADE", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); this.emit('error');}
 		});
 		
 		client.query("CREATE TYPE UTILISATEUR_ROLE AS ENUM ('admin', 'user', 'moderator')", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); this.emit('error');}
 		});
 
 		client.query("CREATE TABLE utilisateur( "
@@ -37,8 +36,8 @@ Users.prototype.create = function() {
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('createDone');
+			if ( err ) this.emit('error');
+			this.emit('createDone');
 		});
 	});
 };
@@ -47,7 +46,7 @@ Users.prototype.create = function() {
  * SELECT an user from database
  */
 Users.prototype.select = function(user_id) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 
 		client.query("SELECT id"
 					+ ", username"
@@ -58,8 +57,8 @@ Users.prototype.select = function(user_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('selectDone', result.rows[0]);
+			if ( err ) this.emit('error');
+			this.emit('selectDone', result.rows[0]);
 		});
 	});
 };
@@ -68,7 +67,7 @@ Users.prototype.select = function(user_id) {
  * SELECT a list of users from database
  */
 Users.prototype.list = function() {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		
 		client.query("SELECT id"
 					+ ", username"
@@ -77,8 +76,8 @@ Users.prototype.list = function() {
 					+ ", creation_date"
 					+ " FROM utilisateur ", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('listDone', result.rows);
+			if ( err ) this.emit('error');
+			this.emit('listDone', result.rows);
 		});
 	});
 };
@@ -87,15 +86,15 @@ Users.prototype.list = function() {
  * INSERT an user on database
  */
 Users.prototype.insert = function(username, password) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {
 				client.query("INSERT INTO utilisateur(username, password)"
 							+ " VALUES($1, $2) RETURNING id", [username, hash], function(err, result) {
 					done(client);
-					if ( err ) self.emit('error');
-					self.emit('insertDone');
+					if ( err ) this.emit('error');
+					this.emit('insertDone');
 				});						
 			});
 		});
@@ -106,13 +105,13 @@ Users.prototype.insert = function(username, password) {
  * DELETE an user from database
  */
 Users.prototype.remove = function(user_id) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		
 		client.query("DELETE FROM utilisateurs"
 					+ " WHERE id = $1", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('removeDone');
+			if ( err ) this.emit('error');
+			this.emit('removeDone');
 		});
 	});
 };
@@ -121,7 +120,7 @@ Users.prototype.remove = function(user_id) {
  * UPDATE an user on database
  */
 Users.prototype.update = function(user_id, username, password) {
-	pg.connect(self.databaseURL, function(err, client, done) {
+	pg.connect(this.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {
@@ -131,8 +130,8 @@ Users.prototype.update = function(user_id, username, password) {
 							+ ", update_date = NOW()"
 							+ " WHERE id = $3", [username, hash, user_id], function(err, result) {
 					done(client);
-					if ( err ) self.emit('error');
-					self.emit('updateDone');
+					if ( err ) this.emit('error');
+					this.emit('updateDone');
 				});
 			});
 		});
@@ -148,15 +147,15 @@ Users.prototype.checkPassword = function(username, password) {
 		
 		client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
+			if ( err ) this.emit('error');
 			
 			var user_id = result.rows[0].id;
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
 				if ( result == true ) {
-					self.emit('passwordOk', user_id);
+					this.emit('passwordOk', user_id);
 				}
 				else {
-					self.emit('passwordKo');
+					this.emit('passwordKo');
 				}
 			});
 		});
