@@ -3,7 +3,7 @@
 var news = new News();
   
 var handleError = function(req, res) {
-	//res.writeHead(500 , {'content(type': 'text/html'});
+	res.writeHead(500 , {'content(type': 'text/html'});
 	res.end('An error occurred');
 };
 
@@ -119,13 +119,15 @@ exports.update = function(req, res) {
 	var title = req.body.title;
 	var content = req.body.content;
 	
-	news.update(news_id, title, content);
+	setTimeout(function() {
+		news.update(news_id, title, content);
 
-	news.on('error', function() {
-		handleError(req, res)
-	});
+		news.on('error', function() {
+			handleError(req, res)
+		});
 	
-	news.on('updateDone', function() {
-		res.redirect('/news');
+		news.on('updateDone', function() {
+			res.redirect('/news');
+		});
 	});
  };
