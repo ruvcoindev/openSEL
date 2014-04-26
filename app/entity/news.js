@@ -1,6 +1,6 @@
 ﻿var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
-var util = require('util);
+var util = require('util');
 
 var News = function() {
     var self = this;
