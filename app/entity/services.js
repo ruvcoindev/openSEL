@@ -1,5 +1,6 @@
 ﻿var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
+var util = require('util);
 
 var Services = function() {
     var self = this;

@@ -1,6 +1,7 @@
 ﻿var pg = require('pg');
 var bcrypt = require('bcrypt');
 var EventEmitter = require('events').EventEmitter;
+var util = require('util);
 
 var Users = function() {
     var self = this;
