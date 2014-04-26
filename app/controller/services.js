@@ -19,7 +19,6 @@ exports.list = function(req, res) {
 	});
 	
 	services.on('listDone', function(services) {
-		res.setHeader('Content-Type','text/html');
 		res.render('services',{ services: services });
 	});
 };
@@ -38,7 +37,6 @@ exports.detail = function(req, res) {
 	});
 	
 	services.on('selectDone', function(service) {
-		res.setHeader('Content-Type','text/html');
 		res.render('services/detail',{ service: service });
 	});
 };
@@ -48,7 +46,6 @@ exports.detail = function(req, res) {
  * Render add formulaire
  */
 exports.addForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
 	res.render('services/add');
 };
 
@@ -64,7 +61,6 @@ exports.updateForm = function(req, res) {
 		handleError(req, res)
 	});
 	services.on('selectDone', function(service) {
-		res.setHeader('Content-Type','text/html');
 		res.render('services/update', { service: service });
 	});
 };
@@ -75,7 +71,6 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var service_id = parseInt(req.params.id);
-	res.setHeader('Content-Type','text/html');
 	res.render('services/delete', {service_id: service_id});
 };
 

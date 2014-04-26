@@ -19,7 +19,6 @@ exports.list = function(req, res) {
 	});
 	
 	transactions.on('listDone', function(transactions) {
-		res.setHeader('Content-Type','text/html');
 		res.render('transactions',{ transactions: transactions });
 	});
 };
@@ -38,7 +37,6 @@ exports.detail = function(req, res) {
 	});
 	
 	transactions.on('selectDone', function(transaction) {
-		res.setHeader('Content-Type','text/html');
 		res.render('transactions/detail',{ transaction: transaction });
 	});
 };
@@ -48,7 +46,6 @@ exports.detail = function(req, res) {
  * Render add formulaire
  */
 exports.addForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
 	res.render('transactions/add');
 };
 
@@ -64,7 +61,6 @@ exports.updateForm = function(req, res) {
 		handleError(req, res)
 	});
 	transactions.on('selectDone', function(transaction) {
-		res.setHeader('Content-Type','text/html');
 		res.render('transactions/update', { transactions: transaction });
 	});
 };
@@ -75,7 +71,6 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var transaction_id = parseInt(req.params.id);
-	res.setHeader('Content-Type','text/html');
 	res.render('transactions/delete', {transaction_id: transaction_id});
 };
 

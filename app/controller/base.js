@@ -37,7 +37,6 @@ exports.index = function(req, res) {
  * Render admin view
  */
 exports.administration = function(req, res) {
-	res.setHeader('Content-Type','text/html');
 	res.render('administration');
 };
 

@@ -19,7 +19,6 @@ exports.list = function(req, res) {
 	});
 	
 	news.on('listDone', function(news) {
-		res.setHeader('Content-Type','text/html');
 		res.render('news',{ news: news });
 	});
 };
@@ -38,7 +37,6 @@ exports.detail = function(req, res) {
 	});
 	
 	news.on('selectDone', function(news) {
-		res.setHeader('Content-Type','text/html');
 		res.render('news/detail',{ nouvelle: news });
 	});
 };
@@ -48,7 +46,6 @@ exports.detail = function(req, res) {
  * Render add formulaire
  */
 exports.addForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
 	res.render('news/add');
 };
 
@@ -64,7 +61,6 @@ exports.updateForm = function(req, res) {
 		handleError(req, res)
 	});
 	news.on('selectDone', function(news) {
-		res.setHeader('Content-Type','text/html');
 		res.render('news/update', { news: news });
 	});
 };
@@ -75,7 +71,6 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var news_id = parseInt(req.params.id);
-	res.setHeader('Content-Type','text/html');
 	res.render('news/delete', {news_id: news_id});
 };
 

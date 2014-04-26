@@ -11,7 +11,6 @@ var handleError = function(req, res) {
  * Render login view
  */
 exports.loginForm = function(req, res) {
-	res.setHeader('Content-Type', 'text/html');
 	res.render('login');
 };
 
@@ -35,7 +34,7 @@ exports.login = function(req, res) {
 	users.checkPassword(username, password);
 	
 	users.on('passwordOk', function(user_id) {
-		req.session.user_id = info.user_id;
+		req.session.user_id = user_id;
 		req.session.authenticated = true;
 		res.redirect('/');
 	});
@@ -58,7 +57,6 @@ exports.login = function(req, res) {
  */
 exports.list = function(req, res) {
 	var users = users.list();
-	res.setHeader('Content-Type','text/html');
 	res.render('users',{ users: users });
 };
 
@@ -70,7 +68,6 @@ exports.detail = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
 	var user = users.select(user_id);
-	res.setHeader('Content-Type','text/html');
 	res.render('users/detail',{user: user});
 };
 
@@ -79,7 +76,6 @@ exports.detail = function(req, res) {
  * Render add formulaire
  */
 exports.addForm = function(req, res) {
-	res.setHeader('Content-Type','text/html');
 	res.render('news/add');
 };
 
@@ -91,7 +87,6 @@ exports.updateForm = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
 	var user = users.select(user_id);	
-	res.setHeader('Content-Type','text/html');
 	res.render('users/update', { user: user });
 };
 
@@ -101,7 +96,6 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var user_id = parseInt(req.params.id);
-	res.setHeader('Content-Type','text/html');
 	res.render('users/delete', {user_id: user_id});
 };
 
