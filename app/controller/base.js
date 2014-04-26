@@ -22,14 +22,17 @@ var handleError = function(req, res) {
 exports.index = function(req, res) {
 		
 	news.on('listDone', function(news) {
+		console.log("listDone event");
 		res.setHeader('Content-Type','text/html');
 		res.render('index',{ news: news });
 	});
 	
 	news.on('error', function() {
+		console.log("error event");
 		handleError(req, res);
 	});
 	
+	console.log("call list");
 	news.list();
 };
  
