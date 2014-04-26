@@ -3,6 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
 var News = function() {
+	EventEmitter.call(this);
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
 util.inherits(News, EventEmitter);

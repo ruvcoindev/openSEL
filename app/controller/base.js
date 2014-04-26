@@ -20,8 +20,7 @@ var handleError = function(req, res) {
  * Load news and render index
  */
 exports.index = function(req, res) {
-	news.list();
-	
+		
 	news.on('listDone', function(news) {
 		res.setHeader('Content-Type','text/html');
 		res.render('index',{ news: news });
@@ -30,6 +29,8 @@ exports.index = function(req, res) {
 	news.on('error', function() {
 		handleError(req, res);
 	});
+	
+	news.list();
 };
  
 /**
