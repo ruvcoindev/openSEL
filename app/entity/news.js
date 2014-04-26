@@ -14,18 +14,20 @@ util.inherits(News, EventEmitter);
  * Event createDone : news database model is create
  */
 News.prototype.create = function() {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("DROP TABLE IF EXISTS nouvelles", function(err) {
-			if ( err ) {done(client);this.emit('error');}
+			if ( err ) {done(client); self.emit('error');}
 		});
 
 		client.query("DROP TYPE IF EXISTS NOUVELLES_STATUS CASCADE", function(err) {
-			if ( err ) {done(client);this.emit('error');}
+			if ( err ) {done(client); self.emit('error');}
 		});
 		
 		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')", function(err) {
-			if ( err ) {done(client);this.emit('error');}
+			if ( err ) {done(client); self.emit('error');}
 		});
 
 		client.query("CREATE TABLE nouvelles( "
@@ -36,8 +38,8 @@ News.prototype.create = function() {
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
 			client(done);
-			if ( err ) this.emit('error');
-			this.emit('createDone');
+			if ( err ) self.emit('error');
+			self.emit('createDone');
 		});
 	});
 }
@@ -48,7 +50,9 @@ News.prototype.create = function() {
  * Event selectDone : new was found on database
  */
 News.prototype.select = function(news_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", content"
@@ -58,8 +62,8 @@ News.prototype.select = function(news_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [news_id],function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('selectDone', result.rows[0]);
+			if ( err ) self.emit('error');
+			self.emit('selectDone', result.rows[0]);
 		});
 	});
 };
@@ -93,14 +97,16 @@ News.prototype.list = function() {
  * Event insertDone : news was insert on database
  */
 News.prototype.insert = function(title, content) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO nouvelles("
 					+ " title"
 					+ ", content )"
 					+ " VALUES($1,$2) RETURNING id", [title, content], function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('insertDone');
+			if ( err ) self.emit('error');
+			self.emit('insertDone');
 		});
 	});
 };
@@ -111,12 +117,14 @@ News.prototype.insert = function(title, content) {
  * Event removeDone : news was delete from database
  */
 News.prototype.remove = function(news_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM nouvelles"
 					+ " WHERE id = $1", [news_id], function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('removeDone');
+			if ( err ) self.emit('error');
+			self.emit('removeDone');
 		});
 	});
 };
@@ -127,7 +135,9 @@ News.prototype.remove = function(news_id) {
  * Event updateDone : news was update on database
  */
 News.prototype.update = function(news_id, title, content) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE nouvelles SET"
 					+ " title = $1"
 					+ ", content = $2"
@@ -135,8 +145,8 @@ News.prototype.update = function(news_id, title, content) {
 					+ " WHERE id = $3", [title, content, news_id], function(err, result) {
 					
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('updateDone');
+			if ( err ) self.emit('error');
+			self.emit('updateDone');
 		});
 	});
 };

@@ -2,7 +2,8 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var Transactions = function() {
+function Transactions() {
+	EventEmitter.call(this);
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
 util.inherits(Transactions, EventEmitter);
@@ -13,10 +14,11 @@ util.inherits(Transactions, EventEmitter);
  * Event createDone : transactions database model is create
  */
 Transactions.prototype.create = function() {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("DROP TABLE IF EXISTS transactions", function(err) {
-			if ( err ) {done(client);this.emit('error');}
+			if ( err ) {done(client);self.emit('error');}
 		});
 
 		client.query("CREATE TABLE transactions( "
@@ -28,8 +30,8 @@ Transactions.prototype.create = function() {
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() )", function(err) {
 			client(done);
-			if ( err ) this.emit('error');
-			this.emit('createDone');
+			if ( err ) self.emit('error');
+			self.emit('createDone');
 		});
 	});
 }
@@ -40,7 +42,8 @@ Transactions.prototype.create = function() {
  * Event selectDone : transaction was found on database
  */
 Transactions.prototype.select = function(transaction_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", cost"
 					+ ", service_id"
@@ -52,8 +55,8 @@ Transactions.prototype.select = function(transaction_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [transaction_id],function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('selectDone', result.rows[0]);
+			if ( err ) self.emit('error');
+			self.emit('selectDone', result.rows[0]);
 		});
 	});
 };
@@ -64,7 +67,8 @@ Transactions.prototype.select = function(transaction_id) {
  * Event listDone : transactions was found on database
  */
 Transactions.prototype.list = function() {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", cost"
 					+ ", service_id"
@@ -74,8 +78,8 @@ Transactions.prototype.list = function() {
 					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM transactions", function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('listDone', result.rows);
+			if ( err ) self.emit('error');
+			self.emit('listDone', result.rows);
 		});
 	});
 };
@@ -86,7 +90,8 @@ Transactions.prototype.list = function() {
  * Event insertDone : transaction was insert on database
  */
 Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO transactions("
 					+ " cost"
 					+ ", service_id"
@@ -94,8 +99,8 @@ Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user
 					+ ", to_user_id )"
 					+ " VALUES($1,$2,$3,$4) RETURNING id", [cost, service_id, from_user_id, to_user_id], function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('insertDone');
+			if ( err ) self.emit('error');
+			self.emit('insertDone');
 		});
 	});
 };
@@ -106,12 +111,13 @@ Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user
  * Event removeDone : transaction was delete from database
  */
 Transactions.prototype.remove = function(transaction_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM transactions"
 					+ " WHERE id = $1", [transaction_id], function(err, result) {
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('removeDone');
+			if ( err ) self.emit('error');
+			self.emit('removeDone');
 		});
 	});
 };
@@ -122,7 +128,8 @@ Transactions.prototype.remove = function(transaction_id) {
  * Event updateDone : transaction was update on database
  */
 Transactions.prototype.update = function(transaction_id, cost, service_id, from_user_id, to_user_id) {
-	pg.connect(this.databaseURL, function(err, client, done) {
+	var self = this;
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE transactions SET"
 					+ " cost = $1"
 					+ ", service_id = $2"
@@ -132,8 +139,8 @@ Transactions.prototype.update = function(transaction_id, cost, service_id, from_
 					+ " WHERE id = $5", [cost, service_id, from_user_id, to_user_id, transaction_id], function(err, result) {
 					
 			done(client);
-			if ( err ) this.emit('error');
-			this.emit('updateDone');
+			if ( err ) self.emit('error');
+			self.emit('updateDone');
 		});
 	});
 };
