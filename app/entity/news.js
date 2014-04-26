@@ -85,7 +85,6 @@ News.prototype.list = function() {
 					+ " FROM nouvelles",function(err, result) {
 			done(client);
 			if ( err ) self.emit('error');
-			console.log("emit event listDone");
 			self.emit('listDone', result.rows);
 		});
 	});
