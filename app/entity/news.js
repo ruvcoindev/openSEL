@@ -70,7 +70,7 @@ News.prototype.select = function(news_id) {
  * Event listDone : news was found on database
  */
 News.prototype.list = function() {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", content"
@@ -90,7 +90,7 @@ News.prototype.list = function() {
  * Event insertDone : news was insert on database
  */
 News.prototype.insert = function(title, content) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO nouvelles("
 					+ " title"
 					+ ", content )"
@@ -108,7 +108,7 @@ News.prototype.insert = function(title, content) {
  * Event removeDone : news was delete from database
  */
 News.prototype.remove = function(news_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM nouvelles"
 					+ " WHERE id = $1", [news_id], function(err, result) {
 			done(client);
@@ -124,7 +124,7 @@ News.prototype.remove = function(news_id) {
  * Event updateDone : news was update on database
  */
 News.prototype.update = function(news_id, title, content) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE nouvelles SET"
 					+ " title = $1"
 					+ ", content = $2"

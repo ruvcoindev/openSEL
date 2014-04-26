@@ -81,7 +81,7 @@ Services.prototype.select = function(service_id) {
  * Event listDone : services was found on database
  */
 Services.prototype.list = function() {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", title"
 					+ ", description"
@@ -103,7 +103,7 @@ Services.prototype.list = function() {
  * Event insertDone : services was insert on database
  */
 Services.prototype.insert = function(user_id, type, title, description) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO services("
 					+ " user_id"
 					+ ", type"
@@ -123,7 +123,7 @@ Services.prototype.insert = function(user_id, type, title, description) {
  * Event removeDone : service was delete from database
  */
 Services.prototype.remove = function(service_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM services"
 					+ " WHERE id = $1", [service_id], function(err, result) {
 			done(client);
@@ -139,7 +139,7 @@ Services.prototype.remove = function(service_id) {
  * Event updateDone : service was update on database
  */
 Services.prototype.update = function(service_id, type, status, title, description) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE services SET"
 					+ " type = $1"
 					+ " status = $2"

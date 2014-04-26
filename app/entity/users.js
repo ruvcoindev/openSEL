@@ -14,7 +14,7 @@ util.inherits(Users, EventEmitter);
  * Create database model
  */
 Users.prototype.create = function() {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 	
 		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
 			if ( err ) {done(client); self.emit('error');}
@@ -47,7 +47,7 @@ Users.prototype.create = function() {
  * SELECT an user from database
  */
 Users.prototype.select = function(user_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 
 		client.query("SELECT id"
 					+ ", username"
@@ -68,7 +68,7 @@ Users.prototype.select = function(user_id) {
  * SELECT a list of users from database
  */
 Users.prototype.list = function() {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("SELECT id"
 					+ ", username"
@@ -87,7 +87,7 @@ Users.prototype.list = function() {
  * INSERT an user on database
  */
 Users.prototype.insert = function(username, password) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {
@@ -106,7 +106,7 @@ Users.prototype.insert = function(username, password) {
  * DELETE an user from database
  */
 Users.prototype.remove = function(user_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("DELETE FROM utilisateurs"
 					+ " WHERE id = $1", [user_id], function(err, result) {
@@ -121,7 +121,7 @@ Users.prototype.remove = function(user_id) {
  * UPDATE an user on database
  */
 Users.prototype.update = function(user_id, username, password) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {

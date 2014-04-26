@@ -65,7 +65,7 @@ Transactions.prototype.select = function(transaction_id) {
  * Event listDone : transactions was found on database
  */
 Transactions.prototype.list = function() {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
 					+ ", cost"
 					+ ", service_id"
@@ -87,7 +87,7 @@ Transactions.prototype.list = function() {
  * Event insertDone : transaction was insert on database
  */
 Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO transactions("
 					+ " cost"
 					+ ", service_id"
@@ -107,7 +107,7 @@ Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user
  * Event removeDone : transaction was delete from database
  */
 Transactions.prototype.remove = function(transaction_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM transactions"
 					+ " WHERE id = $1", [transaction_id], function(err, result) {
 			done(client);
@@ -123,7 +123,7 @@ Transactions.prototype.remove = function(transaction_id) {
  * Event updateDone : transaction was update on database
  */
 Transactions.prototype.update = function(transaction_id, cost, service_id, from_user_id, to_user_id) {
-	pg.connect(databaseURL, function(err, client, done) {
+	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE transactions SET"
 					+ " cost = $1"
 					+ ", service_id = $2"
