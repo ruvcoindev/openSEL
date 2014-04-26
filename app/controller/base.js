@@ -22,7 +22,6 @@ var handleError = function(req, res) {
 exports.index = function(req, res) {
 		
 	news.on('listDone', function(news) {
-		res.setHeader('Content-Type','text/html');
 		res.render('index',{ news: news });
 	});
 	
