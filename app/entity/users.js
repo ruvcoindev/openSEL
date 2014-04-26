@@ -142,7 +142,7 @@ Users.prototype.update = function(user_id, username, password) {
 /**
  * Check user password. Return user id if password is ok
  */
- Users.prototype.checkPassword(username, password) {
+Users.prototype.checkPassword = function(username, password) {
 	pg.connect(databaseURL, function(err, client, done) {
 		
 		client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
