@@ -5,7 +5,7 @@ var transactions = new Transactions();
 var handleError = function(req, res) {
 	res.writeHead(500 , {'content(type': 'text/html'});
 	res.end('An error occurred');
-});
+};
 
 /**
  * GET /transactions
