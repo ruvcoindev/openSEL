@@ -99,14 +99,16 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var news_id = parseInt(req.params.id);
 
-	news.remove(news_id);
-	
-	news.on('error', function() {
-		handleError(req, res)
-	});
-	
-	news.on('removeDone', function() {
-		res.redirect('/news');
+	setTimeout(function() {
+		news.remove(news_id);
+		
+		news.on('error', function() {
+			handleError(req, res)
+		});
+		
+		news.on('removeDone', function() {
+			res.redirect('/news');
+		});
 	});
 };
 
@@ -119,15 +121,11 @@ exports.update = function(req, res) {
 	var title = req.body.title;
 	var content = req.body.content;
 	
-	setTimeout(function() {
-		news.update(news_id, title, content);
-
-		news.on('error', function() {
-			handleError(req, res)
-		});
+	var promise = news.update(news_id, title, content);
 	
-		news.on('updateDone', function() {
-			res.redirect('/news');
-		});
+	promise.then(function() {
+		res.redirect('/news');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
  };

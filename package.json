@@ -29,7 +29,8 @@
 	"jade": "*",
 	"pg": "*",
 	"bcrypt": "~0.7.7",
-	"events": "*"
+	"events": "*",
+	"q": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],

@@ -1,6 +1,7 @@
 ﻿var pg = require('pg');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var Q = require('q');
 
 function News() {
 	EventEmitter.call(this);
@@ -135,6 +136,7 @@ News.prototype.remove = function(news_id) {
  */
 News.prototype.update = function(news_id, title, content) {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE nouvelles SET"
@@ -144,10 +146,11 @@ News.prototype.update = function(news_id, title, content) {
 					+ " WHERE id = $3", [title, content, news_id], function(err, result) {
 					
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('updateDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve(done);
 		});
 	});
+	return deferred.promise;
 };
 
 module.exports = News;
