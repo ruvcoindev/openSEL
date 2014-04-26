@@ -28,7 +28,8 @@
     "express": "~3.4.4",
 	"jade": "*",
 	"pg": "*",
-	"bcrypt": "~0.7.7"
+	"bcrypt": "~0.7.7",
+	"events": "*"
   },
   "devDependencies": {},
   "bundleDependencies": [],
