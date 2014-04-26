@@ -1,0 +1,34 @@
+﻿extends ../layout
+
+block content
+	
+	h2 Liste des transactions
+	a(href="/transactions/add") Ajouter une transaction
+	if transactions
+		p
+			table
+				thead
+					tr
+						th Identifiant
+						th cost
+						th service
+						th donneur
+						th receveur
+						th Date de création
+						th Date de modification
+						th Action
+						
+				tbody
+				- each transaction in transactions
+					tr
+						td #{transaction.id}
+						td #{transaction.cost}
+						td #{transaction.service_id}
+						td #{transaction.from_user_id}
+						td #{transaction.to_user_id}
+						td #{transaction.creation_date}
+						td #{transaction.update_date}
+						td
+							a(href='/transactions/'+ transaction.id + '/update') Modifier
+							a(href='/transactions/'+ transaction.id + '/delete') Supprimer
+				tbody

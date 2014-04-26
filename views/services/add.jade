@@ -1,0 +1,20 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Création d'un service
+	p 
+		form(method='post', action='/services/add', id='add-service-form')
+			.form-group
+				label(for='title') Le titre
+				input(type='text', name='title', class='form-control', id='title', placeholder='Entrez le titre de votre service')
+			.form-group
+				label(for='description') La description
+				textarea(name='description', class='form-control', id='description', placeholder='Entrez la description de votre service')
+			.form-group
+				label(for='type') Le type
+				textarea(name='type', class='form-control', id='type', placeholder='Entrez le type de votre service')
+			.form-group
+				button.btn.btn-default Créer le service

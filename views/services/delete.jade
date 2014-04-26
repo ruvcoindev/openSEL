@@ -1,0 +1,9 @@
+﻿extends ../layout
+
+block content
+	
+	h2 Suppression d'un service
+	p 
+		form(method='post', action='/services/' + service_id + '/delete', id='delete-service-form')
+			.form-group
+				button.btn.btn-default Supprimer le service

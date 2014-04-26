@@ -1,0 +1,23 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Création d'une transaction
+	p 
+		form(method='post', action='/transactions/add', id='add-transaction-form')
+			.form-group
+				label(for='cost') Le titre
+				input(type='text', name='cost', class='form-control', id='cost', placeholder='Entrez le cout de la transaction')
+			.form-group
+				label(for='service_id') Le service
+				textarea(name='service_id', class='form-control', id='service_id', placeholder='Entrez l'identifiant du service')
+			.form-group
+				label(for='from_user_id') Le service
+				textarea(name='from_user_id', class='form-control', id='from_user_id', placeholder='Entrez l'identifiant de l'utilisateur donnateur')
+			.form-group
+				label(for='to_user_id') Le service
+				textarea(name='to_user_id', class='form-control', id='to_user_id', placeholder='Entrez l'identifiant de l'utilisateur receveur')
+			.form-group
+				button.btn.btn-default Créer la transaction

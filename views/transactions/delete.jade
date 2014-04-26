@@ -1,0 +1,9 @@
+﻿extends ../layout
+
+block content
+	
+	h2 Suppression d'une transaction
+	p 
+		form(method='post', action='/transactions/' + transaction_id + '/delete', id='delete-transaction-form')
+			.form-group
+				button.btn.btn-default Supprimer la transaction

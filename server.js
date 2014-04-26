@@ -2,7 +2,13 @@
 
 //  OpenShift sample Node application
 var express = require('express');
-var routes	= require('./routes');
+
+// load controllers
+var base = require('./app/controller/base');
+var news = require('./app/controller/news');
+var users = require('./app/controller/users');
+var services = require('./app/controller/services');
+var transactions = require('./app/controller/transactions');
 
 /**
  *  Define the sample application.
@@ -102,50 +108,54 @@ var SampleApp = function() {
 		self.app.param('id', /^\d+$/);
 			
 		// Public routes
-		self.app.get('/', routes.index);
-		self.app.get('/login', routes.login);
+		self.app.get('/', base.index);
+		self.app.get('/login', users.loginForm);
+		self.app.post('/login', users.login);
 		
 		// Restricted routes
-		self.app.get('/logout', self.restrict, routes.logout);
-		self.app.get('/catalogue', self.restrict, routes.services);
-		self.app.get('/administration', self.restrict, routes.administration);
-		
-		// User GET routes
-		self.app.get('/users', self.restrict, routes.users);
-		self.app.get('/users/:id', self.restrict, routes.detailUser);
-		self.app.get('/users/:id/delete', self.restrict, routes.deleteUserForm);
-		self.app.get('/users/:id/update', self.restrict, routes.updateUserForm);
-		self.app.get('/users/add', self.restrict, routes.addUserForm);
-
-		// User POST routes
-		self.app.post('/users/add', self.restrict, routes.addUser);
-		self.app.post('/users/:id/delete', self.restrict, routes.deleteUser);
-		self.app.post('/users/:id/update', self.restrict, routes.updateUser);
-		
-		// News GET routes
-		self.app.get('/news', self.restrict, routes.news);
-		self.app.get('/news/:id', self.restrict, routes.detailNews);
-		self.app.get('/news/:id/delete', self.restrict, routes.deleteNewsForm);
-		self.app.get('/news/:id/update', self.restrict, routes.updateNewsForm);
-		self.app.get('/news/add', self.restrict, routes.addNewsForm);
+		self.app.get('/logout', self.restrict, users.logout);
+		self.app.get('/administration', self.restrict, base.administration);
+		self.app.get('/databaseReset', self.restrict, base.databaseReset);
 				
-		// News POST routes
-		self.app.post('/news/add', self.restrict, routes.addNews);
-		self.app.post('/news/:id/delete', self.restrict, routes.deleteNews);
-		self.app.post('/news/:id/update', self.restrict, routes.updateNews);
+		// User routes
+		self.app.get('/users', self.restrict, users.list);
+		self.app.get('/users/:id', self.restrict, users.detail);
+		self.app.get('/users/:id/delete', self.restrict, users.removeForm);
+		self.app.get('/users/:id/update', self.restrict, users.updateForm);
+		self.app.get('/users/add', self.restrict, users.addForm);
+		self.app.post('/users/add', self.restrict, users.add);
+		self.app.post('/users/:id/delete', self.restrict, users.remove);
+		self.app.post('/users/:id/update', self.restrict, users.update);
 		
+		// News routes
+		self.app.get('/news', self.restrict, news.list);
+		self.app.get('/news/:id', self.restrict, news.detail);
+		self.app.get('/news/:id/delete', self.restrict, news.removeForm);
+		self.app.get('/news/:id/update', self.restrict, news.updateForm);
+		self.app.get('/news/add', self.restrict, news.addForm);
+		self.app.post('/news/add', self.restrict, news.add);
+		self.app.post('/news/:id/delete', self.restrict, news.remove);
+		self.app.post('/news/:id/update', self.restrict, news.update);
 		
-		self.app.get('/databaseReset', self.restrict, routes.databaseReset);
-		self.app.get('/offer/new', self.restrict, routes.addOfferForm);
-		self.app.get('/request/new', self.restrict, routes.addRequestForm);
-		self.app.get('/transaction/new', self.restrict, routes.addTransactionForm);
+		// Services routes
+		self.app.get('/services', self.restrict, services.list);
+		self.app.get('/services/:id', self.restrict, services.detail);
+		self.app.get('/services/:id/delete', self.restrict, services.removeForm);
+		self.app.get('/services/:id/update', self.restrict, services.updateForm);
+		self.app.get('/services/add', self.restrict, services.addForm);
+		self.app.post('/services/add', self.restrict, services.add);
+		self.app.post('/services/:id/delete', self.restrict, services.remove);
+		self.app.post('/services/:id/update', self.restrict, services.update);
 		
-		// POST
-		self.app.post('/login', routes.loginUser);
-		self.app.post('/offer/new', self.restrict, routes.addOffer);
-		self.app.post('/request/new', self.restrict, routes.addRequest);
-		self.app.post('/transaction/new', self.restrict, routes.addTransaction);
-		
+		// Transactions routes
+		self.app.get('/transactions', self.restrict, transactions.list);
+		self.app.get('/transactions/:id', self.restrict, transactions.detail);
+		self.app.get('/transactions/:id/delete', self.restrict, transactions.removeForm);
+		self.app.get('/transactions/:id/update', self.restrict, transactions.updateForm);
+		self.app.get('/transactions/add', self.restrict, transactions.addForm);
+		self.app.post('/transactions/add', self.restrict, transactions.add);
+		self.app.post('/transactions/:id/delete', self.restrict, transactions.remove);
+		self.app.post('/transactions/:id/update', self.restrict, transactions.update);		
     };
 
 
