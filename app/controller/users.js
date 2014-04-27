@@ -44,6 +44,7 @@ exports.login = function(req, res) {
 			res.render('login', { flash: flash });
 		}
 	}).catch(function(err) {
+		console.log(err);
 		handleError(req, res)
 	});
 };

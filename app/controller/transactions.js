@@ -34,7 +34,7 @@ exports.detail = function(req, res) {
 		res.render('transactions/detail',{ transaction: transaction });
 	}).catch(function(err) {
 		handleError(req, res)
-	});	
+	});
 };
 
 /**
