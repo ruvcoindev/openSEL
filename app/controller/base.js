@@ -29,7 +29,6 @@ exports.index = function(req, res) {
 		handleError(req, res)
 	});
 };
-};
  
 /**
  * GET /administration
