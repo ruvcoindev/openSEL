@@ -1,4 +1,6 @@
-﻿var flash = {};
+﻿var fs = require('fs');
+
+var flash = {};
 
 var Users = require('../entity/users');
 var News = require('../entity/news');
