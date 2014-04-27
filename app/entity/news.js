@@ -33,7 +33,7 @@ News.prototype.create = function() {
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
-			client(done);
+			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
 		});

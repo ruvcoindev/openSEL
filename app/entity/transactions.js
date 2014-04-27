@@ -26,7 +26,7 @@ Transactions.prototype.create = function() {
 						+ ", to_user_id INTEGER"
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() )", function(err) {
-			client(done);
+			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
 		});
