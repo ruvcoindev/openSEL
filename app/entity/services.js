@@ -36,6 +36,7 @@ Services.prototype.create = function() {
 
 		client.query("CREATE TABLE services( "
 						+ "id SERIAL"
+						+ ", user_id INTEGER"
 						+ ", title CHARACTER VARYING(32)"
 						+ ", description TEXT"
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
@@ -60,6 +61,7 @@ Services.prototype.select = function(service_id) {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
+					+ ", user_id"
 					+ ", title"
 					+ ", description"
 					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
@@ -87,6 +89,7 @@ Services.prototype.list = function() {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
+					+ ", user_id"
 					+ ", title"
 					+ ", description"
 					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
