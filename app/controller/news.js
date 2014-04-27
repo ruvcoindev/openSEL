@@ -12,14 +12,12 @@ var handleError = function(req, res) {
  * Select news list on database and render view
  */
 exports.list = function(req, res) {
-	news.list();
+	var promise = news.list();
 	
-	news.on('error', function() {
-		handleError(req, res)
-	});
-	
-	news.on('listDone', function(news) {
+	promise.then(function(news) {
 		res.render('news',{ news: news });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -30,14 +28,12 @@ exports.list = function(req, res) {
 exports.detail = function(req, res) {
 	var news_id = parseInt(req.params.id);
 	
-	news.select(news_id);
+	var promise = news.select(news_id);
 	
-	news.on('error', function() {
-		handleError(req, res)
-	});
-	
-	news.on('selectDone', function(news) {
+	promise.then(function(news) {
 		res.render('news/detail',{ nouvelle: news });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -56,12 +52,12 @@ exports.addForm = function(req, res) {
 exports.updateForm = function(req, res) {
 	var news_id = parseInt(req.params.id);
 	
-	news.select(news_id);	
-	news.on('error', function() {
-		handleError(req, res)
-	});
-	news.on('selectDone', function(news) {
+	var promise = news.select(news_id);	
+		
+	promise.then(function(news) {
 		res.render('news/update', { news: news });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -83,12 +79,12 @@ exports.add = function(req, res) {
 	var title = req.body.title;
 	var content = req.body.content;
 	
-	news.insert(title, content);
-	news.on('error', function() {
-		handleError(req, res)
-	});
-	news.on('insertDone', function() {
+	var promise = news.insert(title, content);
+	
+	promise.then(function() {
 		res.redirect('/news');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -99,16 +95,12 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var news_id = parseInt(req.params.id);
 
-	setTimeout(function() {
-		news.remove(news_id);
-		
-		news.on('error', function() {
-			handleError(req, res)
-		});
-		
-		news.on('removeDone', function() {
-			res.redirect('/news');
-		});
+	var promise = news.remove(news_id);
+	
+	promise.then(function() {
+		res.redirect('/news');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 

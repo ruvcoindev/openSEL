@@ -16,19 +16,20 @@ util.inherits(News, EventEmitter);
  */
 News.prototype.create = function() {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("DROP TABLE IF EXISTS nouvelles", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 
 		client.query("DROP TYPE IF EXISTS NOUVELLES_STATUS CASCADE", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 		
 		client.query("CREATE TYPE NOUVELLES_STATUS AS ENUM ('hidden', 'publish')", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 
 		client.query("CREATE TABLE nouvelles( "
@@ -39,19 +40,20 @@ News.prototype.create = function() {
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
 			client(done);
-			if ( err ) self.emit('error');
-			self.emit('createDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
 		});
 	});
+	
+	return deferred.promise;
 }
 
 /**
  * SELECT a news from database
- * Event error : something is wrong with database
- * Event selectDone : new was found on database
- */
+  */
 News.prototype.select = function(news_id) {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
@@ -63,10 +65,12 @@ News.prototype.select = function(news_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [news_id],function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('selectDone', result.rows[0]);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows[0]);
 		});
 	});
+	
+	return deferred.promise;
 };
 
 /**
@@ -76,6 +80,7 @@ News.prototype.select = function(news_id) {
  */
 News.prototype.list = function() {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("SELECT id"
@@ -85,19 +90,20 @@ News.prototype.list = function() {
 					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM nouvelles",function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('listDone', result.rows);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows);
 		});
 	});
+	
+	return deferred.promise;
 };
 
 /**
  * INSERT a news on database
- * Event error : something is wrong with database
- * Event insertDone : news was insert on database
  */
 News.prototype.insert = function(title, content) {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("INSERT INTO nouvelles("
@@ -105,34 +111,35 @@ News.prototype.insert = function(title, content) {
 					+ ", content )"
 					+ " VALUES($1,$2) RETURNING id", [title, content], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('insertDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve(done);
 		});
 	});
+	
+	return deferrred.promise;
 };
 
 /**
  * DELETE a news from database
- * Event error : something is wrong with database
- * Event removeDone : news was delete from database
  */
 News.prototype.remove = function(news_id) {
 	var self = this;
+	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM nouvelles"
 					+ " WHERE id = $1", [news_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('removeDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve(done);
 		});
 	});
+	
+	return deferred.promise;
 };
 
 /**
  * UPDATE a news on database
- * Event error : something is wrong with database
- * Event updateDone : news was update on database
  */
 News.prototype.update = function(news_id, title, content) {
 	var self = this;
