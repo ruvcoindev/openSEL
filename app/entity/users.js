@@ -1,32 +1,30 @@
 ﻿var pg = require('pg');
 var bcrypt = require('bcrypt');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+var Q = require('q');
 
 function Users() {
-	EventEmitter.call(this);
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
-
-util.inherits(Users, EventEmitter);
 
 /**
  * Create database model
  */
 Users.prototype.create = function() {
 	var self = this;
+	var deferred = Q.defer();
+		
 	pg.connect(self.databaseURL, function(err, client, done) {
 	
 		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 
 		client.query("DROP TYPE IF EXISTS UTILISATEUR_ROLE CASCADE", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 		
 		client.query("CREATE TYPE UTILISATEUR_ROLE AS ENUM ('admin', 'user', 'moderator')", function(err) {
-			if ( err ) {done(client); self.emit('error');}
+			if ( err ) {done(client); deferred.reject(err);}
 		});
 
 		client.query("CREATE TABLE utilisateur( "
@@ -38,10 +36,12 @@ Users.prototype.create = function() {
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('createDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
 		});
 	});
+	
+	return deferred.promise;
 };
 
 /**
@@ -49,6 +49,8 @@ Users.prototype.create = function() {
  */
 Users.prototype.select = function(user_id) {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 
 		client.query("SELECT id"
@@ -60,10 +62,11 @@ Users.prototype.select = function(user_id) {
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('selectDone', result.rows[0]);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows[0]);
 		});
 	});
+	return deferred.promise;
 };
 
 /**
@@ -71,6 +74,8 @@ Users.prototype.select = function(user_id) {
  */
 Users.prototype.list = function() {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("SELECT id"
@@ -80,10 +85,11 @@ Users.prototype.list = function() {
 					+ ", creation_date"
 					+ " FROM utilisateur ", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('listDone', result.rows);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows);
 		});
 	});
+	return deferred.promise;
 };
 
 /**
@@ -91,6 +97,8 @@ Users.prototype.list = function() {
  */
 Users.prototype.insert = function(username, password) {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
@@ -98,12 +106,13 @@ Users.prototype.insert = function(username, password) {
 				client.query("INSERT INTO utilisateur(username, password)"
 							+ " VALUES($1, $2) RETURNING id", [username, hash], function(err, result) {
 					done(client);
-					if ( err ) self.emit('error');
-					self.emit('insertDone');
+					if ( err ) deferred.reject(err);
+					deferred.resolve();
 				});						
 			});
 		});
 	});
+	return deferred.promise;
 };
 
 /**
@@ -111,15 +120,18 @@ Users.prototype.insert = function(username, password) {
  */
 Users.prototype.remove = function(user_id) {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("DELETE FROM utilisateurs"
 					+ " WHERE id = $1", [user_id], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
-			self.emit('removeDone');
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
 		});
 	});
+	return deferred.promise;
 };
 
 /**
@@ -127,6 +139,8 @@ Users.prototype.remove = function(user_id) {
  */
 Users.prototype.update = function(user_id, username, password) {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
@@ -137,12 +151,13 @@ Users.prototype.update = function(user_id, username, password) {
 							+ ", update_date = NOW()"
 							+ " WHERE id = $3", [username, hash, user_id], function(err, result) {
 					done(client);
-					if ( err ) self.emit('error');
-					self.emit('updateDone');
+					if ( err ) deferred.reject(err);
+					deferred.resolve();
 				});
 			});
 		});
 	});
+	return deferred.promise;
 };
 
 
@@ -151,23 +166,21 @@ Users.prototype.update = function(user_id, username, password) {
  */
 Users.prototype.checkPassword = function(username, password) {
 	var self = this;
+	var deferred = Q.defer();
+	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
 		client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
 			done(client);
-			if ( err ) self.emit('error');
+			if ( err ) deferred.reject(err);
 			
 			var user_id = result.rows[0].id;
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
-				if ( result == true ) {
-					self.emit('passwordOk', user_id);
-				}
-				else {
-					self.emit('passwordKo');
-				}
+				deferred.resolve(result);
 			});
 		});
 	});
+	return deferred.promise;
  };
  
  

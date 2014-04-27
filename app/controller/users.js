@@ -31,22 +31,20 @@ exports.login = function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	
-	users.checkPassword(username, password);
+	var promise = users.checkPassword(username, password);
 	
-	users.on('passwordOk', function(user_id) {
-		req.session.user_id = user_id;
-		req.session.authenticated = true;
-		res.redirect('/');
-	});
-	
-	users.on('passwordKo', function() {
-		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'Désolé, le mot de passe et/ou le nom d\'utilisateur sont éronnés.' }];
-		res.render('login', { flash: flash });
-	});
-	
-	users.on('error', function() {
-		handleError(req, res);
+	promise.then(function(result) {
+		if ( result ) {
+			req.session.user_id = user_id;
+			req.session.authenticated = true;
+			res.redirect('/');
+		} else {
+			flash.type = 'alert-info';
+			flash.messages = [{ msg: 'Désolé, le mot de passe et/ou le nom d\'utilisateur sont éronnés.' }];
+			res.render('login', { flash: flash });
+		}
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -56,8 +54,13 @@ exports.login = function(req, res) {
  * Select users list on database and render view
  */
 exports.list = function(req, res) {
-	var users = users.list();
-	res.render('users',{ users: users });
+	var promise = users.list();
+	
+	promise.then(function(users) {
+		res.render('users',{ users: users });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
 };
 
 /**
@@ -67,8 +70,13 @@ exports.list = function(req, res) {
 exports.detail = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
-	var user = users.select(user_id);
-	res.render('users/detail',{user: user});
+	var promise = users.select(user_id);
+	
+	promise.then(function(user) {
+		res.render('users/detail',{user: user});
+	}).catch(function(err) {
+		handleError(req, res)
+	});
 };
 
 /**
@@ -86,8 +94,12 @@ exports.addForm = function(req, res) {
 exports.updateForm = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
-	var user = users.select(user_id);	
-	res.render('users/update', { user: user });
+	var promise = users.select(user_id);	
+	promise.then(function(user) {
+		res.render('users/update', { user: user });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
 };
 
 /**
@@ -108,8 +120,12 @@ exports.add = function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	
-	users.insert(username, password);
-	res.redirect('/users');
+	var promise = users.insert(username, password);
+	promise.then(function(user) {
+		res.redirect('/users');
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };
 
 /**
@@ -119,8 +135,13 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
-	users.remove(user_id);
-	res.redirect('/users');
+	var promise = users.remove(user_id);
+	
+	promise.then(function(user) {
+		res.redirect('/users');
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };
 
 
@@ -133,6 +154,10 @@ exports.update = function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 
-	users.update(user_id, username, password);
-	res.redirect('/users');
+	var promise = users.update(user_id, username, password);
+	promise.then(function(user) {
+		res.redirect('/users');
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };

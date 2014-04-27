@@ -1,13 +1,9 @@
 ﻿var pg = require('pg');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
 var Q = require('q');
 
 function News() {
-	EventEmitter.call(this);
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
 };
-util.inherits(News, EventEmitter);
 
 /**
  * Create database model

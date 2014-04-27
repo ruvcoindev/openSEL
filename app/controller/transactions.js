@@ -12,15 +12,13 @@ var handleError = function(req, res) {
  * Select transaction list on database and render view
  */
 exports.list = function(req, res) {
-	transactions.list();
+	var promise = transactions.list();
 	
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	
-	transactions.on('listDone', function(transactions) {
+	promise.then(function(transactions) {
 		res.render('transactions',{ transactions: transactions });
-	});
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };
 
 /**
@@ -30,15 +28,13 @@ exports.list = function(req, res) {
 exports.detail = function(req, res) {
 	var transaction_id = parseInt(req.params.id);
 	
-	transactions.select(transaction_id);
+	var promise = transactions.select(transaction_id);
 	
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	
-	transactions.on('selectDone', function(transaction) {
+	promise.then(function(transaction) {
 		res.render('transactions/detail',{ transaction: transaction });
-	});
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };
 
 /**
@@ -56,13 +52,13 @@ exports.addForm = function(req, res) {
 exports.updateForm = function(req, res) {
 	var transaction_id = parseInt(req.params.id);
 	
-	transactions.select(transaction_id);	
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	transactions.on('selectDone', function(transaction) {
+	var promise = transactions.select(transaction_id);	
+		
+	promise.then(function(transaction) {
 		res.render('transactions/update', { transactions: transaction });
-	});
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
 };
 
 /**
@@ -79,18 +75,16 @@ exports.removeForm = function(req, res) {
  * Add transaction on database
  */
 exports.add = function(req, res) {
-
 	var cost = req.body.cost;
 	var from_user_id = req.body.from_user_id;
 	var to_user_id = req.body.to_user_id;
 		
-	transactions.insert(cost, from_user_id, to_user_id);
+	var promise = transactions.insert(cost, from_user_id, to_user_id);
 	
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	transactions.on('insertDone', function() {
+	promise.then(function() {
 		res.redirect('/transactions');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -101,14 +95,12 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var transaction_id = parseInt(req.params.id);
 
-	transactions.remove(transaction_id);
+	var promise = transactions.remove(transaction_id);
 	
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	
-	transactions.on('removeDone', function() {
+	promise.then(function() {
 		res.redirect('/transactions');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -123,13 +115,11 @@ exports.update = function(req, res) {
 	var from_user_id = req.body.from_user_id;
 	var to_user_id = req.body.to_user_id;
 	
-	transactions.update(transaction_id, cost, from_user_id, to_user_id);
+	var promise = transactions.update(transaction_id, cost, from_user_id, to_user_id);
 
-	transactions.on('error', function() {
-		handleError(req, res)
-	});
-	
-	transactions.on('updateDone', function() {
+	promise.then(function() {
 		res.redirect('/transactions');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
  };
