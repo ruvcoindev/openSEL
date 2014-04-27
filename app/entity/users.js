@@ -176,7 +176,8 @@ Users.prototype.checkPassword = function(username, password) {
 			
 			var user_id = result.rows[0].id;
 			bcrypt.compare(password, result.rows[0].password, function (err, result) {
-				deferred.resolve(result, user_id);
+				if ( result ) deferred.resolve(user_id);
+				else deferred.resolve(false);
 			});
 		});
 	});

@@ -33,8 +33,8 @@ exports.login = function(req, res) {
 	
 	var promise = users.checkPassword(username, password);
 	
-	promise.then(function(result, user_id) {
-		if ( result ) {
+	promise.then(function(user_id) {
+		if ( user_id ) {
 			req.session.user_id = user_id;
 			req.session.authenticated = true;
 			res.redirect('/');
