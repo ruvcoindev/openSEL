@@ -1,6 +1,7 @@
 ﻿var pg = require('pg');
 var bcrypt = require('bcrypt');
 var Q = require('q');
+var fs = require('fs');
 
 function Users() {
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
@@ -168,19 +169,24 @@ Users.prototype.checkPassword = function(username, password) {
 	var self = this;
 	var deferred = Q.defer();
 	
-	pg.connect(self.databaseURL, function(err, client, done) {
-		
-		client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
-			done(client);
-			if ( err ) deferred.reject(err);
+	if ( fs.exists('/app/install.txt')) {
+		deferred.resolve(1);
+	}
+	else {
+		pg.connect(self.databaseURL, function(err, client, done) {
 			
-			var user_id = result.rows[0].id;
-			bcrypt.compare(password, result.rows[0].password, function (err, result) {
-				if ( result ) deferred.resolve(user_id);
-				else deferred.resolve(false);
+			client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
+				done(client);
+				if ( err ) deferred.reject(err);
+				
+				var user_id = result.rows[0].id;
+				bcrypt.compare(password, result.rows[0].password, function (err, result) {
+					if ( result ) deferred.resolve(user_id);
+					else deferred.resolve(false);
+				});
 			});
 		});
-	});
+	}
 	return deferred.promise;
  };
  

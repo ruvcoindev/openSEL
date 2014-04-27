@@ -59,6 +59,8 @@ exports.databaseReset = function(req, res) {
 		return users.insert("admin","admin");
 	})
 	.then(function() {
+		fs.unlink("/app/install.txt");
+	
 		flash.type = 'alert-info';
 		flash.messages = [{ msg: 'La base de donnée viens d\'être ré-installée.' }];
 		res.render('administration', { flash: flash });	
