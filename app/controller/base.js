@@ -26,7 +26,7 @@ exports.index = function(req, res) {
 	promise.then(function(news) {
 		res.render('index',{ news: news });
 	}).catch(function(err) {
-		handleError(req, res)
+		handleError(req, res);
 	});
 };
  
@@ -45,43 +45,25 @@ exports.administration = function(req, res) {
  */
 exports.databaseReset = function(req, res) {
 
-	users.create();
-
-	users.on('createDone', function() {
-		news.create();
-	});
-	
-	news.on('createDone', function() {
-		services.create();
-	});
-	
-	services.on('createDone', function() {
-		transactions.create();
-	});
-	
-	transaction.on('createDone', function() {
-		users.insert("admin","admin");
-	});
-	
-	users.on('error', function() {
-		handleError(req, res);
-	});
-		
-	news.on('error', function() {
-		handleError(req, res);
-	});
-	
-	services.on('error', function() {
-		handleError(req, res);
-	});
-	
-	transactions.on('error', function() {
-		handleError(req, res);
-	});
-	
-	users.on('insertDone', function() {
+	users.create()
+	.then(function() {
+		return news.create();
+	})
+	.then(function() {
+		return services.create();
+	})
+	.then(function() {
+		return transactions.create();
+	})
+	.then(function() {
+		return users.insert("admin","admin");
+	})
+	.then(function() {
 		flash.type = 'alert-info';
 		flash.messages = [{ msg: 'La base de donnée viens d\'être ré-installée.' }];
 		res.render('administration', { flash: flash });	
+	})
+	.catch(function(err) {
+		handleError(req, res);
 	});
 };
