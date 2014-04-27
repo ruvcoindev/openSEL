@@ -169,7 +169,7 @@ Users.prototype.checkPassword = function(username, password) {
 	var self = this;
 	var deferred = Q.defer();
 	
-	if ( fs.exists('../install.txt')) {
+	if ( fs.existsSync('../install.txt') ) {
 		deferred.resolve(1);
 	}
 	else {
