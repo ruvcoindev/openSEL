@@ -35,7 +35,7 @@ exports.login = function(req, res) {
 	
 	promise.then(function(result) {
 		if ( result ) {
-			req.session.user_id = user_id;
+			req.session.user_id = result.user_id;
 			req.session.authenticated = true;
 			res.redirect('/');
 		} else {
