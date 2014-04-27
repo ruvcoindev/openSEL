@@ -12,14 +12,12 @@ var handleError = function(req, res) {
  * Select service list on database and render view
  */
 exports.list = function(req, res) {
-	services.list();
+	var promise = services.list();
 	
-	services.on('error', function() {
-		handleError(req, res)
-	});
-	
-	services.on('listDone', function(services) {
+	promise.then(function(services) {
 		res.render('services',{ services: services });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -30,14 +28,12 @@ exports.list = function(req, res) {
 exports.detail = function(req, res) {
 	var service_id = parseInt(req.params.id);
 	
-	services.select(service_id);
-	
-	services.on('error', function() {
-		handleError(req, res)
-	});
-	
-	services.on('selectDone', function(service) {
+	var promise = services.select(service_id);
+
+	promise.then(function(service) {
 		res.render('services/detail',{ service: service });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -56,12 +52,12 @@ exports.addForm = function(req, res) {
 exports.updateForm = function(req, res) {
 	var service_id = parseInt(req.params.id);
 	
-	services.select(service_id);	
-	services.on('error', function() {
-		handleError(req, res)
-	});
-	services.on('selectDone', function(service) {
+	var promise = services.select(service_id);	
+	
+	promise.then(function(service) {
 		res.render('services/update', { service: service });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -83,13 +79,12 @@ exports.add = function(req, res) {
 	var description = req.body.description;
 	var type = req.body.type;
 	
-	services.insert(req.session.user_id, type, title, description) ;
+	var promise = services.insert(req.session.user_id, type, title, description) ;
 	
-	services.on('error', function() {
-		handleError(req, res)
-	});
-	services.on('insertDone', function() {
+	promise.then(function(service) {
 		res.redirect('/services');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -100,14 +95,12 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var services_id = parseInt(req.params.id);
 
-	services.remove(services_id);
+	var promise = services.remove(services_id);
 	
-	services.on('error', function() {
-		handleError(req, res)
-	});
-	
-	services.on('removeDone', function() {
+	promise.then(function(service) {
 		res.redirect('/services');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
 };
 
@@ -123,13 +116,11 @@ exports.update = function(req, res) {
 	var type = req.body.type;
 	var status = req.body.status;
 	
-	services.update(service_id, type, status, title, description);
-
-	services.on('error', function() {
-		handleError(req, res)
-	});
+	var promise = services.update(service_id, type, status, title, description);
 	
-	services.on('updateDone', function() {
+	promise.then(function(service) {
 		res.redirect('/services');
+	}).catch(function(err) {
+		handleError(req, res)
 	});
  };
