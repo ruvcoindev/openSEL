@@ -42,7 +42,7 @@ Services.prototype.create = function() {
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", type SERVICES_TYPE DEFAULT 'offer'::SERVICES_TYPE"
 						+ ", status SERVICES_STATUS DEFAULT 'disable'::SERVICES_STATUS)", function(err) {
-			client(done);
+			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
 		});
