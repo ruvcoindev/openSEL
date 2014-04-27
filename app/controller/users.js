@@ -15,7 +15,7 @@ exports.loginForm = function(req, res) {
 };
 
 /**
- * GET logout
+ * GET /logout
  * Destroy user session and redirect to index
  */
 exports.logout = function(req, res) {

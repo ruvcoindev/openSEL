@@ -8,8 +8,11 @@ block content
 		li Credit : #{user.credit}
 		li Date de création : #{user.creation_date}
 		
-	h2 Modifier des informations
-	p 
+	h2 Action
+	ul
+		li: a(href="/users/"+user.id+"/update") Modifier des informations
+		li: a(href="/services/add") Ajouter un service (offre ou demande)
+		li: a(href="/transaction/add") Enregistrer une transaction
 	
 	h2 Vos offres
 	if user.services
@@ -18,8 +21,7 @@ block content
 			if service.type = 'offer'
 				li #{service.title} - #{service.description}
 		ul
-	a(href="/offer/new") Ajouter une offre
-	
+		
 	h2 Vos demandes
 	if user.services
 		ul
@@ -27,7 +29,6 @@ block content
 			if service.type = 'request'
 				li #{service.title} - #{service.description}
 		ul
-	a(href="/request/new") Ajouter une demande
 	
 	h2 Vos transactions
 	if user.transactions
@@ -35,4 +36,3 @@ block content
 		- each transaction in user.transactions
 			li #{transaction.id} - #{transaction.cost}
 		ul
-	a(href="/transaction/new") Enregistrer une transaction

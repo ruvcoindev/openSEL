@@ -108,6 +108,12 @@ div#contenu a:hover
     color: #9b2 ;
 }
 
+div#space
+{
+	height: 20px;
+	clear: both;
+}
+
 p#footer
 {
     margin: 0 ;
@@ -115,7 +121,6 @@ p#footer
     line-height: 30px ;
     text-align: right ;
     color: #8a0 ;
-	clear: both;
 	background-color: #dea;
 }
 

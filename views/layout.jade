@@ -12,7 +12,7 @@ html(lang="fr")
 				li: a(href="/") Accueil
 				if authenticated
 					li: a(href="/users/" + user_id) Mon compte
-					li: a(href="/catalogue") Le catalogue
+					li: a(href="/services") Le catalogue
 					li: a(href="/administration") Administration
 				if authenticated
 					li: a(href="/logout") Déconnection
@@ -30,6 +30,8 @@ html(lang="fr")
 						ul
 			block content
 
+		div(id="space")
+		
 		p(id="footer") 
 			span Site web fonctionnant avec 
 				a(href="https://github.com/KevinPolez/openSEL") openSEL
