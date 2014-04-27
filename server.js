@@ -115,7 +115,9 @@ var SampleApp = function() {
 		// Restricted routes
 		self.app.get('/logout', self.restrict, users.logout);
 		self.app.get('/administration', self.restrict, base.administration);
-		self.app.get('/databaseReset', self.restrict, base.databaseReset);
+		
+		// TODO restrict this route
+		self.app.get('/databaseReset', base.databaseReset);
 				
 		// User routes
 		self.app.get('/users', self.restrict, users.list);
