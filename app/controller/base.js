@@ -20,16 +20,15 @@ var handleError = function(req, res) {
  * Load news and render index
  */
 exports.index = function(req, res) {
-		
-	news.on('listDone', function(news) {
+			
+	var promise = news.list();
+	
+	promise.then(function(news) {
 		res.render('index',{ news: news });
+	}).catch(function(err) {
+		handleError(req, res)
 	});
-	
-	news.on('error', function() {
-		handleError(req, res);
-	});
-	
-	news.list();
+};
 };
  
 /**

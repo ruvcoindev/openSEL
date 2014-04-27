@@ -11,8 +11,6 @@ util.inherits(News, EventEmitter);
 
 /**
  * Create database model
- * Event error : something is wrong with database
- * Event createDone : news database model is create
  */
 News.prototype.create = function() {
 	var self = this;
