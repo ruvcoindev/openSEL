@@ -13,7 +13,8 @@ html(lang="fr")
 				if authenticated
 					li: a(href="/users/" + user_id) Mon compte
 					li: a(href="/services") Le catalogue
-					li: a(href="/administration") Administration
+					if isAdmin
+						li: a(href="/administration") Administration
 				if authenticated
 					li: a(href="/logout") Déconnection
 				else

@@ -87,7 +87,7 @@ var SampleApp = function() {
 	};
 	
 	self.restrictAdmin = function(req, res, next) {
-		if ( req.session.authenticated && req.session.user_role == 'admin') {
+		if ( req.session.authenticated && req.session.isAdmin ) {
 			next();
 		} else {
 			req.session.error = 'Vous devez être connecter pour acceder à cette page';
@@ -201,7 +201,7 @@ var SampleApp = function() {
 			
 			res.locals.authenticated = req.session.authenticated;
 			res.locals.user_id = req.session.user_id;
-			res.locals.user_role = req.session.user_role;
+			res.locals.isAdmin = req.session.isAdmin;
 			next();
 		});
 		

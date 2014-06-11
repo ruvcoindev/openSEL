@@ -37,7 +37,9 @@ exports.login = function(req, res) {
 		if ( user ) {
 			req.session.user_id = user.id;
 			req.session.authenticated = true;
-			req.session.user_role = user.role;
+			if ( user.role == 'admin' ) {
+				req.session.isAdmin = true;
+			}
 			res.redirect('/');
 		} else {
 			flash.type = 'alert-info';
