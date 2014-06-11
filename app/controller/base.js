@@ -22,14 +22,22 @@ var handleError = function(req, res) {
  * Load news and render index
  */
 exports.index = function(req, res) {
-			
-	var promise = news.list();
+
+	nouvelles = [];
+	catalogue = [];
 	
-	promise.then(function(news) {
-		res.render('index',{ news: news });
-	}).catch(function(err) {
-		handleError(req, res);
-	});
+	news.list()
+		.then(function(data){
+			nouvelles = data;
+			return services.list();
+		})
+		.then(function(data){
+			catalogue = data;
+			res.render('index',{ news: nouvelles, services: catalogue });
+		});
+		.catch(function(err) {
+			handleError(req, res);
+		});
 };
  
 /**

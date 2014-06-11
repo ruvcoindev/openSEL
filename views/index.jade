@@ -6,3 +6,8 @@ block content
 			h2 #{news[i].title}
 			p #{news[i].content}
 		- }
+	if services
+		- for (var i = 0; i < services.length; i++) {
+			h2 #{services[i].title}
+			p #{services[i].description}
+		- }
