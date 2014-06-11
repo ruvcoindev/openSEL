@@ -15,8 +15,11 @@ html(lang="fr")
 					li: a(href="/services") Le catalogue
 					if isAdmin
 						li: a(href="/administration") Administration
-				if authenticated
-					li: a(href="/logout") Déconnection
+						li: a(href="/logout") Déconnection
+					else
+						li: a(href="/users/" + user_id) Mon compte
+						li: a(href="/services") Le catalogue
+						li: a(href="/logout") Déconnection				
 				else
 					li: a(href="/login") Se connecter
 

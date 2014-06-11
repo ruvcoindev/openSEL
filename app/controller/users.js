@@ -39,8 +39,12 @@ exports.login = function(req, res) {
 			req.session.authenticated = true;
 			if ( user.role == 'admin' ) {
 				req.session.isAdmin = true;
+				res.redirect('/administration');
 			}
-			res.redirect('/');
+			else {
+				req.session.isAdmin = false;
+				res.redirect('/users/'+user.id);
+			}
 		} else {
 			flash.type = 'alert-info';
 			flash.messages = [{ msg: 'Désolé, le mot de passe et/ou le nom d\'utilisateur sont éronnés.' }];
