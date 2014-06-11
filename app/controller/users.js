@@ -1,4 +1,5 @@
 ﻿var Users = require('../entity/users');
+var Services = require('../entity/services');
 var users = new Users();
 var services = new Services();
 
