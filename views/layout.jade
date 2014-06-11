@@ -11,8 +11,6 @@ html(lang="fr")
 			ul(id="menu")
 				li: a(href="/") Accueil
 				if authenticated
-					li: a(href="/users/" + user_id) Mon compte
-					li: a(href="/services") Le catalogue
 					if isAdmin
 						li: a(href="/administration") Administration
 						li: a(href="/logout") Déconnection

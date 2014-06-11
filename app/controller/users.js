@@ -128,8 +128,10 @@ exports.add = function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	var role = req.body.role;
+	var email = req.body.email;
+	var phone = req.body.phone;
 	
-	var promise = users.insert(username, role, password);
+	var promise = users.insert(username, role, password, email, phone);
 	promise.then(function(user) {
 		res.redirect('/users');
 	}).catch(function(err) {
@@ -161,11 +163,12 @@ exports.remove = function(req, res) {
 exports.update = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	var username = req.body.username;
-	var password = req.body.password;
-
-	var promise = users.update(user_id, username, password);
+	var email = req.body.email;
+	var phone = req.body.phone;
+	
+	var promise = users.update(user_id, username,email, phone);
 	promise.then(function(user) {
-		res.redirect('/users');
+		res.redirect('/users/' + user_id);
 	}).catch(function(err) {
 		handleError(req, res)
 	});	
