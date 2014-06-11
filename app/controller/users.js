@@ -1,5 +1,6 @@
 ﻿var Users = require('../entity/users');
 var users = new Users();
+var services = new Services();
 
 var handleError = function(req, res) {
 	res.writeHead(500 , {'content(type': 'text/html'});
@@ -89,7 +90,7 @@ exports.detail = function(req, res) {
 	users.select(user_id)
 		.then(function(data) {
 			user = data;
-			return service.listOwn(user_id);
+			return services.listOwn(user_id);
 		})
 		.then(function(data) {
 			user.services = data
