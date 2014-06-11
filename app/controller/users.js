@@ -66,7 +66,7 @@ exports.list = function(req, res) {
 
 /**
  * GET /users/:id
- * Select news from database and render view
+ * Select user from database and render view
  */
 exports.detail = function(req, res) {
 	var user_id = parseInt(req.params.id);
@@ -85,7 +85,7 @@ exports.detail = function(req, res) {
  * Render add formulaire
  */
 exports.addForm = function(req, res) {
-	res.render('news/add');
+	res.render('users/add');
 };
 
 /**
