@@ -141,12 +141,12 @@ var SampleApp = function() {
 		// News routes
 		self.app.get('/news', self.restrict, news.list);
 		self.app.get('/news/:id', self.restrict, news.detail);
-		self.app.get('/news/:id/delete', self.restrict, news.removeForm);
-		self.app.get('/news/:id/update', self.restrict, news.updateForm);
-		self.app.get('/news/add', self.restrict, news.addForm);
-		self.app.post('/news/add', self.restrict, news.add);
-		self.app.post('/news/:id/delete', self.restrict, news.remove);
-		self.app.post('/news/:id/update', self.restrict, news.update);
+		self.app.get('/news/:id/delete', self.restrictAdmin, news.removeForm);
+		self.app.get('/news/:id/update', self.restrictAdmin, news.updateForm);
+		self.app.get('/news/add', self.restrictAdmin, news.addForm);
+		self.app.post('/news/add', self.restrictAdmin, news.add);
+		self.app.post('/news/:id/delete', self.restrictAdmin, news.remove);
+		self.app.post('/news/:id/update', self.restrictAdmin, news.update);
 		
 		// Services routes
 		self.app.get('/services', self.restrict, services.list);
