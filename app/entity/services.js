@@ -107,6 +107,33 @@ Services.prototype.list = function() {
 };
 
 /**
+ * SELECT a list of services from database depending an user
+ */
+Services.prototype.listOwn = function(user_id) {
+	var self = this;
+	var deferred = Q.defer();
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		client.query("SELECT id"
+					+ ", user_id"
+					+ ", title"
+					+ ", description"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
+					+ ", type"
+					+ ", status"
+					+ " FROM services"
+					+ " WHERE user_id = $1", [user_id], function(err, result) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows);
+		});
+	});
+	
+	return deferred.promise;
+};
+
+/**
  * INSERT a service on database
  */
 Services.prototype.insert = function(user_id, type, title, description) {
@@ -131,13 +158,13 @@ Services.prototype.insert = function(user_id, type, title, description) {
 /**
  * DELETE a service from database
  */
-Services.prototype.remove = function(service_id) {
+Services.prototype.remove = function(user_id, service_id) {
 	var self = this;
 	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("DELETE FROM services"
-					+ " WHERE id = $1", [service_id], function(err, result) {
+					+ " WHERE id = $1 AND user_id = $2", [service_id, user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
@@ -160,7 +187,7 @@ Services.prototype.update = function(service_id, type, status, title, descriptio
 					+ " title = $3"
 					+ ", description = $4"
 					+ ", update_date = NOW()"
-					+ " WHERE id = $5", [type, status, title, description, service_id], function(err, result) {
+					+ " WHERE id = $5 AND user_id = $6", [type, status, title, description, service_id, user_id], function(err, result) {
 					
 			done(client);
 			if ( err ) deferred.reject(err);

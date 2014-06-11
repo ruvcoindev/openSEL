@@ -82,7 +82,7 @@ exports.add = function(req, res) {
 	var promise = services.insert(req.session.user_id, type, title, description) ;
 	
 	promise.then(function(service) {
-		res.redirect('/services');
+		res.redirect('/users/'+req.session.user_id);
 	}).catch(function(err) {
 		handleError(req, res)
 	});
@@ -95,10 +95,10 @@ exports.add = function(req, res) {
 exports.remove = function(req, res) {
 	var services_id = parseInt(req.params.id);
 
-	var promise = services.remove(services_id);
+	var promise = services.remove(req.session.user_id, services_id);
 	
 	promise.then(function(service) {
-		res.redirect('/services');
+		res.redirect('/users/'+req.session.user_id);
 	}).catch(function(err) {
 		handleError(req, res)
 	});
@@ -116,7 +116,7 @@ exports.update = function(req, res) {
 	var type = req.body.type;
 	var status = req.body.status;
 	
-	var promise = services.update(service_id, type, status, title, description);
+	var promise = services.update(req.session.user_id, service_id, type, status, title, description);
 	
 	promise.then(function(service) {
 		res.redirect('/services');
