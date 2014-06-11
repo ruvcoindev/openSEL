@@ -9,7 +9,7 @@ block content
 		form(method='post', action='/users/' + user_id + '/update', id='update-user-form')
 			.form-group
 				label(for='username') Nom d'utilisateur
-				input(type='text', name='username', class='form-control', id='username', placeholder='Entrez le nom d\'utilisateur')
+				input(type='text', value=user.name, name='username', class='form-control', id='username', placeholder='Entrez le nom d\'utilisateur')
 			.form-group
 				label(for='password') Mot de passe
 				input(type='text', name='password', class='form-control', id='password', placeholder='Entrez le mot de passe')

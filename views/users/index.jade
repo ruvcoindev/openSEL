@@ -13,12 +13,14 @@ block content
 					tr
 						th Identifiant
 						th Nom d'utilisateur
+						th Date de création
 						th Action
 				tbody
 				- each user in users
 					tr
 						td #{user.id}
 						td #{user.username}
+						td #{user.creation_date}
 						td
-							a(href='/user/'+ user.id + '/update') Modifier
-							a(href='/user/'+ user.id + '/delete') Supprimer
+							a(href='/users/'+ user.id + '/update') Modifier&nbsp;
+							a(href='/users/'+ user.id + '/delete') Supprimer

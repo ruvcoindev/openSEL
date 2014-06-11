@@ -58,7 +58,7 @@ Users.prototype.select = function(user_id) {
 					+ ", username"
 					+ ", role"
 					+ ", credit"
-					+ ", creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
 					+ " FROM utilisateur "
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [user_id], function(err, result) {
@@ -83,7 +83,7 @@ Users.prototype.list = function() {
 					+ ", username"
 					+ ", role"
 					+ ", credit"
-					+ ",  to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
 					+ " FROM utilisateur ", function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
