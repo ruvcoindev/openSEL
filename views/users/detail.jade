@@ -21,7 +21,7 @@ block content
 	if user.services
 		ul
 		- each service in user.services
-			if service.type = 'offer'
+			if service.type == 'offer'
 				li #{service.title} - #{service.description}
 		ul
 		
@@ -29,7 +29,7 @@ block content
 	if user.services
 		ul
 		- each service in user.services
-			if service.type = 'request'
+			if service.type == 'request'
 				li #{service.title} - #{service.description}
 		ul
 	
