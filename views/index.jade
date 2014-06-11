@@ -6,8 +6,24 @@ block content
 			h2 #{news[i].title}
 			p #{news[i].content}
 		- }
+		
 	if services
-		- for (var i = 0; i < services.length; i++) {
-			h2 #{services[i].title}
-			p #{services[i].description}
-		- }
+		h2 Les dernières offres
+			- each service in services
+				table
+					thead
+						tr
+							th Intitulé
+							th Description
+					tbody
+						if service.type == 'offer'
+							tr
+								td #{services[i].title}
+								td #{services[i].description}
+					
+		h2 Les dernières demandes
+			- each service in services
+				if service.type == 'request'
+					h2 #{services[i].title}
+					p #{services[i].description}
+					
