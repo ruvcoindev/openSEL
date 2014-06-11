@@ -59,11 +59,13 @@ Users.prototype.select = function(user_id) {
 		client.query("SELECT id"
 					+ ", username"
 					+ ", role"
-					+ ", credit"
+					+ ", SUM(transaction_add.cost) - SUM(transaction_sub.cost) as credit"
 					+ ", email"
 					+ ", phone"
-					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
-					+ " FROM utilisateur "
+					+ ", to_char(user.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ " FROM utilisateur as user "
+					+ " LEFT JOIN transaction_sub ON user.id = transaction.from_user_id "
+					+ " LEFT JOIN transaction_add ON user.id = transaction.to_user_id "
 					+ " WHERE id = $1"
 					+ " LIMIT 1", [user_id], function(err, result) {
 			done(client);
@@ -86,11 +88,11 @@ Users.prototype.list = function() {
 		client.query("SELECT id"
 					+ ", username"
 					+ ", role"
-					+ ", credit"
+					+ ", 0 as credit"
 					+ ", email"
 					+ ", phone"
-					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
-					+ " FROM utilisateur ", function(err, result) {
+					+ ", to_char(user.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ " FROM utilisateur as user ", function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve(result.rows);

@@ -97,7 +97,7 @@ Transactions.prototype.insert = function(from_user_id, cost, username, service_i
 					+ ", service_id"
 					+ ", from_user_id"
 					+ ", to_user_id )"
-					+ " SELECT $1, $2, $3, id FROM users WHERE username = $4", [cost, service_id, from_user_id, username], function(err, result) {
+					+ " SELECT $1, $2, $3, id FROM utilisateur WHERE username = $4", [cost, service_id, from_user_id, username], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
