@@ -28,7 +28,7 @@ News.prototype.create = function() {
 
 		client.query("CREATE TABLE nouvelles( "
 						+ "id SERIAL"
-						+ ", title CHARACTER VARYING(32)"
+						+ ", title CHARACTER VARYING(64)"
 						+ ", content TEXT"
 						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
 						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
