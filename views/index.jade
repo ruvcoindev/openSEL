@@ -9,21 +9,21 @@ block content
 		
 	if services
 		h2 Les dernières offres
-			- each service in services
-				table
-					thead
+		- each service in services
+			table
+				thead
+					tr
+						th Intitulé
+						th Description
+				tbody
+					if service.type == 'offer'
 						tr
-							th Intitulé
-							th Description
-					tbody
-						if service.type == 'offer'
-							tr
-								td #{services[i].title}
-								td #{services[i].description}
+							td #{services[i].title}
+							td #{services[i].description}
 					
 		h2 Les dernières demandes
-			- each service in services
-				if service.type == 'request'
-					h2 #{services[i].title}
-					p #{services[i].description}
+		- each service in services
+			if service.type == 'request'
+				h2 #{services[i].title}
+				p #{services[i].description}
 					
