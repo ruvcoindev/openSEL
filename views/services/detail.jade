@@ -1,11 +1,14 @@
 ﻿extends ../layout
 
 block content
+
+	a(href='/services') Revenir au catalogue
+	
 	h2 #{service.title}
 	p #{service.description}
 	
 	div
 		ul
-			li #{user.name}
+			li #{user.username}
 			li #{user.email}
 			li #{user.phone}
