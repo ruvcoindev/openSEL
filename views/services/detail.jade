@@ -1,5 +1,11 @@
 ﻿extends ../layout
 
 block content
-	h2 #{service.tile}
+	h2 #{service.title}
 	p #{service.description}
+	
+	div
+		ul
+			li #{user.name}
+			li #{user.email}
+			li #{user.phone}

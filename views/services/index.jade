@@ -3,7 +3,7 @@
 block content
 
 	h2 Liste des services
-	a(href="/services/add") Ajouter un service
+
 	if services
 		p
 			table
@@ -12,9 +12,7 @@ block content
 						th Identifiant
 						th Titre
 						th Type
-						th Date de création
-						th Date de modification
-						th Action
+						th Date de publication
 						
 				tbody
 				- each service in services
@@ -24,8 +22,4 @@ block content
 							a(href='/services/'+service.id) #{service.title}
 						td #{service.type}
 						td #{service.creation_date}
-						td #{service.update_date}
-						td
-							a(href='/services/'+ service.id + '/update') Modifier&nbsp;
-							a(href='/services/'+ service.id + '/delete') Supprimer
 				tbody

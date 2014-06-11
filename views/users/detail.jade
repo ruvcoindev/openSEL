@@ -12,10 +12,9 @@ block content
 		
 	h2 Action
 	ul
-		li: a(href="/users/"+user.id+"/updatePassword") Modifier votre mot de passe
 		li: a(href="/users/"+user.id+"/update") Modifier vos informations personnelles
 		li: a(href="/services/add") Ajouter un service (une offre ou une demande)
-		li: a(href="/transaction/add") Enregistrer une transaction
+		li: a(href="/transactions/add") Enregistrer une transaction
 	
 	h2 Vos offres
 	if user.services

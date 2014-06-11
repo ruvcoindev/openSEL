@@ -1,6 +1,8 @@
 ﻿var Services = require('../entity/services');
+var Users = require('../entity/users');
 
 var services = new Services();
+var users = new Users();
   
 var handleError = function(req, res) {
 	res.writeHead(500 , {'content(type': 'text/html'});
@@ -28,13 +30,21 @@ exports.list = function(req, res) {
 exports.detail = function(req, res) {
 	var service_id = parseInt(req.params.id);
 	
-	var promise = services.select(service_id);
-
-	promise.then(function(service) {
-		res.render('services/detail',{ service: service });
-	}).catch(function(err) {
-		handleError(req, res)
-	});
+	service = [];
+	user = [];
+	
+	services.select(service_id)
+		.then(function(data) {
+			service = data;
+			return users.select(data.user_id);
+		})
+		.then(function(data) {
+			user = data;
+			res.render('services/detail',{ service: service, user: user });
+		})
+		.catch(function(err) {
+			handleError(req, res)
+		});
 };
 
 /**
