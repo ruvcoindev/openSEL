@@ -111,7 +111,7 @@ Users.prototype.insert = function(username, role, password, email, phone) {
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {
 				client.query("INSERT INTO utilisateur(username, role, password, email, phone)"
-							+ " VALUES($1, $2, $3, $4) RETURNING id", [username, role, hash, email], function(err, result) {
+							+ " VALUES($1, $2, $3, $4, $5) RETURNING id", [username, role, hash, email, phone], function(err, result) {
 					done(client);
 					if ( err ) deferred.reject(err);
 					deferred.resolve();
