@@ -58,7 +58,7 @@ exports.databaseReset = function(req, res) {
 		return transactions.create();
 	})
 	.then(function() {
-		return users.insert("admin","admin");
+		return users.insert("admin","admin","admin");
 	})
 	.then(function() {
 		fs.unlink("/app/install.txt");

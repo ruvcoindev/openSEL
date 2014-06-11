@@ -96,7 +96,7 @@ Users.prototype.list = function() {
 /**
  * INSERT an user on database
  */
-Users.prototype.insert = function(username, password) {
+Users.prototype.insert = function(username, role, password) {
 	var self = this;
 	var deferred = Q.defer();
 	
@@ -104,8 +104,8 @@ Users.prototype.insert = function(username, password) {
 		
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(password, salt, function(err, hash) {
-				client.query("INSERT INTO utilisateur(username, password)"
-							+ " VALUES($1, $2) RETURNING id", [username, hash], function(err, result) {
+				client.query("INSERT INTO utilisateur(username, role, password)"
+							+ " VALUES($1, $2, $3) RETURNING id", [username, role, hash], function(err, result) {
 					done(client);
 					if ( err ) deferred.reject(err);
 					deferred.resolve();
@@ -175,13 +175,13 @@ Users.prototype.checkPassword = function(username, password) {
 	else {
 		pg.connect(self.databaseURL, function(err, client, done) {
 			
-			client.query("SELECT id, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
+			client.query("SELECT id, role, password FROM utilisateur WHERE username = $1 LIMIT 1", [username], function(err, result) {
 				done(client);
 				if ( err ) deferred.reject(err);
 				
-				var user_id = result.rows[0].id;
+				var user = result.rows[0];
 				bcrypt.compare(password, result.rows[0].password, function (err, result) {
-					if ( result ) deferred.resolve(user_id);
+					if ( result ) deferred.resolve(user);
 					else deferred.resolve(false);
 				});
 			});

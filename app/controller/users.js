@@ -33,10 +33,11 @@ exports.login = function(req, res) {
 	
 	var promise = users.checkPassword(username, password);
 	
-	promise.then(function(user_id) {
-		if ( user_id ) {
-			req.session.user_id = user_id;
+	promise.then(function(user) {
+		if ( user ) {
+			req.session.user_id = user.id;
 			req.session.authenticated = true;
+			req.session.user_role = user.role;
 			res.redirect('/');
 		} else {
 			flash.type = 'alert-info';
@@ -120,8 +121,9 @@ exports.removeForm = function(req, res) {
 exports.add = function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
+	var role = req.body.role;
 	
-	var promise = users.insert(username, password);
+	var promise = users.insert(username, role, password);
 	promise.then(function(user) {
 		res.redirect('/users');
 	}).catch(function(err) {

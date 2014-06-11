@@ -8,6 +8,11 @@ block content
 	p 
 		form(method='post', action='/users/add', id='add-user-form')
 			.form-group
+				label(for='type') Le rôle
+				select(name='type')
+					option(value="user", selected="true") Utilisateur
+					option(value="admin") Administrateur
+			.form-group
 				label(for='username') Nom d'utilisateur
 				input(type='text', name='username', class='form-control', id='username', placeholder='Entrez le nom d\'utilisateur')
 			.form-group
