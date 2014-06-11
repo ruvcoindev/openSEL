@@ -86,6 +86,15 @@ var SampleApp = function() {
 		}
 	};
 	
+	self.restrictAdmin = function(req, res, next) {
+		if ( req.session.authenticated && req.session.user_role == 'admin') {
+			next();
+		} else {
+			req.session.error = 'Vous devez être connecter pour acceder à cette page';
+			res.redirect('/login');
+		}
+	};
+	
     /**
      *  Create the routing table entries + handlers for the application.
      */
@@ -122,12 +131,12 @@ var SampleApp = function() {
 		// User routes
 		self.app.get('/users', self.restrict, users.list);
 		self.app.get('/users/:id', self.restrict, users.detail);
-		self.app.get('/users/:id/delete', self.restrict, users.removeForm);
-		self.app.get('/users/:id/update', self.restrict, users.updateForm);
-		self.app.get('/users/add', self.restrict, users.addForm);
-		self.app.post('/users/add', self.restrict, users.add);
-		self.app.post('/users/:id/delete', self.restrict, users.remove);
-		self.app.post('/users/:id/update', self.restrict, users.update);
+		self.app.get('/users/:id/delete', self.restrictAdmin, users.removeForm);
+		self.app.get('/users/:id/update', self.restrictAdmin, users.updateForm);
+		self.app.get('/users/add', self.restrictAdmin, users.addForm);
+		self.app.post('/users/add', self.restrictAdmin, users.add);
+		self.app.post('/users/:id/delete', self.restrictAdmin, users.remove);
+		self.app.post('/users/:id/update', self.restrictAdmin, users.update);
 		
 		// News routes
 		self.app.get('/news', self.restrict, news.list);
@@ -192,6 +201,7 @@ var SampleApp = function() {
 			
 			res.locals.authenticated = req.session.authenticated;
 			res.locals.user_id = req.session.user_id;
+			res.locals.user_role = req.session.user_role;
 			next();
 		});
 		

@@ -148,7 +148,7 @@ Users.prototype.update = function(user_id, username, password) {
 			bcrypt.hash(password, salt, function(err, hash) {
 				client.query("UPDATE utilisateurs SET"
 							+ " username = $1"
-							+ ", passwprd = $2"
+							+ ", password = $2"
 							+ ", update_date = NOW()"
 							+ " WHERE id = $3", [username, hash, user_id], function(err, result) {
 					done(client);
