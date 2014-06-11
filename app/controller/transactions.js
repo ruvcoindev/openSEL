@@ -76,13 +76,13 @@ exports.removeForm = function(req, res) {
  */
 exports.add = function(req, res) {
 	var cost = req.body.cost;
-	var from_user_id = req.body.from_user_id;
-	var to_user_id = req.body.to_user_id;
+	var username = req.body.username;
+	var service_id = req.body.service_id;
 		
-	var promise = transactions.insert(cost, from_user_id, to_user_id);
+	var promise = transactions.insert(req.session.user_id, cost, username, service_id);
 	
 	promise.then(function() {
-		res.redirect('/transactions');
+		res.redirect('/users/'+user_id);
 	}).catch(function(err) {
 		handleError(req, res)
 	});

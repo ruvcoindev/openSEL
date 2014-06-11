@@ -87,7 +87,7 @@ Transactions.prototype.list = function() {
 /**
  * INSERT a transaction on database
  */
-Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user_id) {
+Transactions.prototype.insert = function(from_user_id, cost, username, service_id) {
 	var self = this;
 	var deferred = Q.defer();
 	
@@ -97,7 +97,7 @@ Transactions.prototype.insert = function(cost, service_id, from_user_id, to_user
 					+ ", service_id"
 					+ ", from_user_id"
 					+ ", to_user_id )"
-					+ " VALUES($1,$2,$3,$4) RETURNING id", [cost, service_id, from_user_id, to_user_id], function(err, result) {
+					+ " SELECT $1, $2, $3, id FROM users WHERE username = $4", [cost, service_id, from_user_id, username], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();
