@@ -11,13 +11,10 @@ block content
 				label(for='cost') Le montant
 				input(type='text', name='cost', class='form-control', id='cost', placeholder='Entrez le cout de la transaction')
 			.form-group
-				label(for='service_id') Le service
-				textarea(name='service_id', class='form-control', id='service_id', placeholder='Entrez l''identifiant du service')
+				label(for='username') Le nom de l'utilisateur
+				input(type='text', name='username', class='form-control', id='username', placeholder='Entrez le nom de l\'utilisateur a qui vous donnez vos pètales')
 			.form-group
-				label(for='from_user_id') Le service
-				textarea(name='from_user_id', class='form-control', id='from_user_id', placeholder='Entrez l''identifiant de l'utilisateur donnateur')
-			.form-group
-				label(for='to_user_id') Le service
-				textarea(name='to_user_id', class='form-control', id='to_user_id', placeholder='Entrez l''identifiant de l'utilisateur receveur')
+				label(for='service_id') L'identifiant du service
+				input(type='text', name='service_id', class='form-control', id='service_id', placeholder='Entrez l\'identifiant du service concerné')
 			.form-group
 				button.btn.btn-default Créer la transaction
