@@ -110,7 +110,7 @@ News.prototype.insert = function(title, content) {
 		});
 	});
 	
-	return deferrred.promise;
+	return deferred.promise;
 };
 
 /**

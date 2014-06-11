@@ -16,16 +16,25 @@ block content
 					th Intitulé
 					th Description
 			tbody
-		- each service in services
-			if service.type == 'offer'
-				tr
-					td #{service.creation_date}
-					td #{service.title}
-					td #{service.description}
+			- each service in services
+				if service.type == 'offer'
+					tr
+						td #{service.creation_date}
+						td #{service.title}
+						td #{service.description}
 					
 		h2 Les dernières demandes
-		- each service in services
-			if service.type == 'request'
-				h2 #{services[i].title}
-				p #{services[i].description}
+		table
+			thead
+				tr
+					th Date de publication
+					th Intitulé
+					th Description
+			tbody
+			- each service in services
+				if service.type == 'request'
+					tr
+						td #{service.creation_date}
+						td #{service.title}
+						td #{service.description}
 					
