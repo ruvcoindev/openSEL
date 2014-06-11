@@ -2,19 +2,21 @@
 
 block content
 
-	a(href='/users'+user_id) Retour
+	a(href='/users/'+user_id) Retour
 	
 	h2 Création d'une transaction
 	p Une transaction représente un certain nombre de pétale que vous offrez à un membre de lambersel en échange d'un service rendu.
 		form(method='post', action='/transactions/add', id='add-transaction-form')
 			.form-group
 				label(for='cost') Le montant
-				input(type='text', name='cost', class='form-control', id='cost', placeholder='Entrez le cout de la transaction')
+				input(type='text', name='cost', class='form-control', id='cost', placeholder='Entrez le coût de la transaction')
 			.form-group
 				label(for='username') Le nom de l'utilisateur
-				input(type='text', name='username', class='form-control', id='username', placeholder='Entrez le nom de l\'utilisateur a qui vous donnez vos pètales')
+				input(type='text', name='username', class='form-control', id='username', placeholder='Entrez le nom de l\'utilisateur')
+				Cet utilisateur aura son compte crédité du montant indiqué, votre compte sera débité du même montant.
 			.form-group
 				label(for='service_id') L'identifiant du service
-				input(type='text', name='service_id', class='form-control', id='service_id', placeholder='Entrez l\'identifiant du service concerné')
+				input(type='text', name='service_id', class='form-control', id='service_id', placeholder='Entrez l\'identifiant du service')
+				Il s'agit de l'identifiant du service pour lequel vous donnez vos pètales.
 			.form-group
 				button.btn.btn-default Créer la transaction
