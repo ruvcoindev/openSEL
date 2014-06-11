@@ -84,18 +84,31 @@ exports.detail = function(req, res) {
 		res.render('/', { flash: flash });
 	}
 	
-	var promise = users.select(user_id);
+	user = [];
 	
-	promise.then(function(user) {
+	users.select(user_id)
+		.then(function(data) {
+			user = data;
+			return service.listOwn(user_id);
+		})
+		.then(function(data) {
+			user.services = data
+			res.render('users/detail',{user: user});
+		})
+		.catch(function (err) {
+			handleError(req, res);
+		});
+	
+	/*promise.then(function(user) {
 		var promiseServices = services.listOwn(user_id);
-			promiseServices.then(function(services) {
-				res.render('users/detail',{user: user});
-			}).catch(function(err) {
-				handleError(req, res)
-			});
+		promiseServices.then(function(services) {
+			res.render('users/detail',{user: user});
+		}).catch(function(err) {
+			handleError(req, res)
+		});
 	}).catch(function(err) {
 		handleError(req, res)
-	});
+	});*/
 };
 
 /**
