@@ -34,7 +34,7 @@ exports.index = function(req, res) {
 		.then(function(data){
 			catalogue = data;
 			res.render('index',{ news: nouvelles, services: catalogue });
-		});
+		})
 		.catch(function(err) {
 			handleError(req, res);
 		});
