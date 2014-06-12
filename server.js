@@ -132,8 +132,8 @@ var SampleApp = function() {
 		self.app.get('/update', self.restrict, base.updateForm); // update personal information
 		self.app.post('/update', self.restrict, base.update);
 		
-		self.app.get('/addTransaction', self.restrict, base.addTransactionForm); // add a transaction
-		self.app.post('/addTransaction', self.restrict, base.addTransaction);
+		self.app.get('/transactions/add', self.restrict, transactions.addForm);
+		self.app.post('/transactions/add', self.restrict, transactions.add);
 		
 		// Services routes
 		self.app.get('/services', self.restrict, services.list);
@@ -174,8 +174,6 @@ var SampleApp = function() {
 		self.app.get('/transactions/:id', self.restrictAdmin, transactions.detail);
 		self.app.get('/transactions/:id/delete', self.restrictAdmin, transactions.removeForm);
 		self.app.get('/transactions/:id/update', self.restrictAdmin, transactions.updateForm);
-		self.app.get('/transactions/add', self.restrictAdmin, transactions.addForm);
-		self.app.post('/transactions/add', self.restrictAdmin, transactions.add);
 		self.app.post('/transactions/:id/delete', self.restrictAdmin, transactions.remove);
 		self.app.post('/transactions/:id/update', self.restrictAdmin, transactions.update);		
     };
