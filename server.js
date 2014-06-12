@@ -127,6 +127,8 @@ var SampleApp = function() {
 		// User Restricted routes
 		self.app.get('/logout', self.restrict, users.logout);
 		self.app.get('/account', self.restrict, base.account);
+		self.app.get('/update', self.restrict, base.updateForm);
+		self.app.post('/update', self.restrict, base.update);
 		self.app.get('/catalogue', self.restrict, base.catalogue);
 		
 		// Admin Restricted routes

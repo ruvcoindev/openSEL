@@ -83,6 +83,39 @@ exports.catalogue = function(req, res) {
 };
  
 /**
+ * GET /update
+ * Select user from database and render update view
+ */
+exports.updateForm = function(req, res) {
+	
+	var promise = users.select(req.session.user_id);	
+	promise.then(function(user) {
+		res.render('update', { user: user });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
+};
+ 
+
+/**
+ * POST /update
+ * Update an user
+ */
+exports.update = function(req, res) {
+	var user_id = parseInt(req.params.id);
+	var username = req.body.username;
+	var email = req.body.email;
+	var phone = req.body.phone;
+	
+	var promise = users.update(user_id, username,email, phone);
+	promise.then(function(user) {
+		res.redirect('/account');
+	}).catch(function(err) {
+		handleError(req, res)
+	});	
+};
+ 
+/**
  * GET /administration
  * Render admin view
  */
