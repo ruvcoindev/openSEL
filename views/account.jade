@@ -40,15 +40,20 @@ block content
 					th Date
 					th Montant
 					th Service
+					th Utilisateur
 			tbody
 			- each transaction in user.transactions
 				if transaction.from_user_id == user_id
 					tr
 						td #{transaction.creation_date}
 						td - #{transaction.cost}
-						td  a(href="/services/"+transaction.service_id) Voir le service concerné.
+						td
+							a(href="/services/"+transaction.service_id) Voir le service concerné.
+						td #{transaction.to_user_id}
 				else
 					tr
 						td #{transaction.creation_date}
 						td + #{transaction.cost}
-						td  a(href="/services/"+transaction.service_id) Voir le service concerné.
+						td
+							a(href="/services/"+transaction.service_id) Voir le service concerné.
+						td #{transaction.from_user_id}
