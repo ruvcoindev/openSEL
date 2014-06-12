@@ -100,7 +100,8 @@ Transactions.prototype.listOwn = function(user_id) {
 					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
 					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
 					+ " FROM transactions "
-					+ " WHERE user_id = $1 ", [user_id], function(err, result) {
+					+ " WHERE from_user_id = $1 "
+					+ "    OR to_user_id = $1 ", [user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve(result.rows);
