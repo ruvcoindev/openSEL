@@ -45,7 +45,7 @@ exports.login = function(req, res) {
 			}
 			else {
 				req.session.isAdmin = false;
-				res.redirect('/users/'+user.id);
+				res.redirect('/account');
 			}
 		} else {
 			flash.type = 'alert-info';
