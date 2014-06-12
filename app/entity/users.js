@@ -56,7 +56,7 @@ Users.prototype.select = function(user_id) {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 
-		client.query("SELECT id"
+		client.query("SELECT utilisateur.id"
 					+ ", username"
 					+ ", role"
 					+ ", SUM(transaction_add.cost) - SUM(transaction_sub.cost) as credit"
