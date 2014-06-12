@@ -36,5 +36,8 @@ block content
 	if user.transactions
 		ul
 		- each transaction in user.transactions
-			li #{transaction.id} - #{transaction.cost}
+			if transaction.from_user_id == user_id
+				li #{transaction.date} - #{transaction.cost}
+			else
+				li #{transaction.date} + #{transaction.cost}
 		ul
