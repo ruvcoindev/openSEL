@@ -132,7 +132,7 @@ var SampleApp = function() {
 		self.app.get('/update', self.restrict, base.updateForm); // update personal information
 		self.app.post('/update', self.restrict, base.update);
 		
-		self.app.get('/addTransaction', self.restrict, base.addTransaction); // add a transaction
+		self.app.get('/addTransaction', self.restrict, base.addTransactionForm); // add a transaction
 		self.app.post('/addTransaction', self.restrict, base.addTransaction);
 		
 		// Services routes

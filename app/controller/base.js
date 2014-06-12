@@ -114,6 +114,34 @@ exports.update = function(req, res) {
 		handleError(req, res)
 	});	
 };
+
+/**
+ * GET /addTransaction
+ * Add a transaction form
+ */
+exports.addTransactionForm = function(req, res) {
+	
+	var promise = users.select(req.session.user_id);	
+	promise.then(function(user) {
+		res.render('update', { user: user });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
+};
+
+/**
+ * POST /addTransaction
+ * Add a transaction
+ */
+exports.addTransaction = function(req, res) {
+	
+	var promise = users.select(req.session.user_id);	
+	promise.then(function(user) {
+		res.render('update', { user: user });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
+};
  
 /**
  * GET /administration
