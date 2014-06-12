@@ -60,6 +60,7 @@ exports.account = function(req, res) {
 		})
 		.then(function(data) {
 			user.transactions = data;
+			user.credit = 0;
 			for ( transaction in user.transactions ) {
 				if ( transaction.from_user_id == req.session.user_id ) {
 					user.credit -= transaction.cost;

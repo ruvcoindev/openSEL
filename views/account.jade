@@ -34,10 +34,21 @@ block content
 	
 	h2 Vos transactions
 	if user.transactions
-		ul
-		- each transaction in user.transactions
-			if transaction.from_user_id == user_id
-				li #{transaction.date} - #{transaction.cost}
-			else
-				li #{transaction.date} + #{transaction.cost}
-		ul
+		table
+			thead
+				tr
+					th Date
+					th Montant
+					th Service
+			tbody
+			- each transaction in user.transactions
+				if transaction.from_user_id == user_id
+					tr
+						td #{transaction.creation_date}
+						td - #{transaction.cost}
+						td  a(href="/services/"+transaction.service_id) Voir le service concerné.
+				else
+					tr
+						td #{transaction.creation_date}
+						td + #{transaction.cost}
+						td  a(href="/services/"+transaction.service_id) Voir le service concerné.
