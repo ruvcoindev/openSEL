@@ -127,9 +127,24 @@ var SampleApp = function() {
 		// User Restricted routes
 		self.app.get('/logout', self.restrict, users.logout);
 		self.app.get('/account', self.restrict, base.account);
-		self.app.get('/update', self.restrict, base.updateForm);
-		self.app.post('/update', self.restrict, base.update);
 		self.app.get('/catalogue', self.restrict, base.catalogue);
+		
+		self.app.get('/update', self.restrict, base.updateForm); // update personal information
+		self.app.post('/update', self.restrict, base.update);
+		
+		self.app.get('/addTransaction', self.restrict, base.addTransaction); // add a transaction
+		self.app.post('/addTransaction', self.restrict, base.addTransaction);
+		
+		// Services routes
+		self.app.get('/services', self.restrict, services.list);
+		self.app.get('/services/:id', self.restrict, services.detail);
+		self.app.get('/services/:id/delete', self.restrict, services.removeForm);
+		self.app.get('/services/:id/update', self.restrict, services.updateForm);
+		self.app.get('/services/add', self.restrict, services.addForm);
+		self.app.post('/services/add', self.restrict, services.add);
+		self.app.post('/services/:id/delete', self.restrict, services.remove);
+		self.app.post('/services/:id/update', self.restrict, services.update);
+		
 		
 		// Admin Restricted routes
 		self.app.get('/administration', self.restrictAdmin, base.administration);
@@ -145,34 +160,24 @@ var SampleApp = function() {
 		self.app.post('/users/:id/update', self.restrictAdmin, users.update);
 		
 		// News routes
-		self.app.get('/news', self.restrict, news.list);
-		self.app.get('/news/:id', self.restrict, news.detail);
+		self.app.get('/news', self.restrictAdmin, news.list);
+		self.app.get('/news/:id', self.restrictAdmin, news.detail);
 		self.app.get('/news/:id/delete', self.restrictAdmin, news.removeForm);
 		self.app.get('/news/:id/update', self.restrictAdmin, news.updateForm);
 		self.app.get('/news/add', self.restrictAdmin, news.addForm);
 		self.app.post('/news/add', self.restrictAdmin, news.add);
 		self.app.post('/news/:id/delete', self.restrictAdmin, news.remove);
 		self.app.post('/news/:id/update', self.restrictAdmin, news.update);
-		
-		// Services routes
-		self.app.get('/services', self.restrict, services.list);
-		self.app.get('/services/:id', self.restrict, services.detail);
-		self.app.get('/services/:id/delete', self.restrict, services.removeForm);
-		self.app.get('/services/:id/update', self.restrict, services.updateForm);
-		self.app.get('/services/add', self.restrict, services.addForm);
-		self.app.post('/services/add', self.restrict, services.add);
-		self.app.post('/services/:id/delete', self.restrict, services.remove);
-		self.app.post('/services/:id/update', self.restrict, services.update);
-		
+				
 		// Transactions routes
-		self.app.get('/transactions', self.restrict, transactions.list);
-		self.app.get('/transactions/:id', self.restrict, transactions.detail);
-		self.app.get('/transactions/:id/delete', self.restrict, transactions.removeForm);
-		self.app.get('/transactions/:id/update', self.restrict, transactions.updateForm);
-		self.app.get('/transactions/add', self.restrict, transactions.addForm);
-		self.app.post('/transactions/add', self.restrict, transactions.add);
-		self.app.post('/transactions/:id/delete', self.restrict, transactions.remove);
-		self.app.post('/transactions/:id/update', self.restrict, transactions.update);		
+		self.app.get('/transactions', self.restrictAdmin, transactions.list);
+		self.app.get('/transactions/:id', self.restrictAdmin, transactions.detail);
+		self.app.get('/transactions/:id/delete', self.restrictAdmin, transactions.removeForm);
+		self.app.get('/transactions/:id/update', self.restrictAdmin, transactions.updateForm);
+		self.app.get('/transactions/add', self.restrictAdmin, transactions.addForm);
+		self.app.post('/transactions/add', self.restrictAdmin, transactions.add);
+		self.app.post('/transactions/:id/delete', self.restrictAdmin, transactions.remove);
+		self.app.post('/transactions/:id/update', self.restrictAdmin, transactions.update);		
     };
 
 
