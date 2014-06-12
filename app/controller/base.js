@@ -39,6 +39,48 @@ exports.index = function(req, res) {
 			handleError(req, res);
 		});
 };
+
+
+/**
+ * GET /account
+ * Select current user from database and render view
+ */
+exports.account = function(req, res) {
+	
+	user = [];
+	
+	users.select(req.session.user_id)
+		.then(function(data) {
+			user = data;
+			return services.listOwn(req.session.user_id);
+		})
+		.then(function(data) {
+			user.services = data;
+			return transactions.listOwn(req.session.user_id);
+		})
+		.then(function(data) {
+			user.transactions = data;
+			res.render('account',{user: user});
+		})
+		.catch(function (err) {
+			handleError(req, res);
+		});
+};
+
+
+/**
+ * GET /catalogue
+ * Select service list on database and render view
+ */
+exports.catalogue = function(req, res) {
+	var promise = services.listOwn(req.session.user_id);
+	
+	promise.then(function(services) {
+		res.render('catalogue',{ services: services });
+	}).catch(function(err) {
+		handleError(req, res)
+	});
+};
  
 /**
  * GET /administration

@@ -1,0 +1,40 @@
+﻿extends layout
+
+block content
+	h2 Détail de votre compte
+	ul
+		li Nom : #{user.username}
+		li Role : #{user.role}
+		li Credit : #{user.credit} pétales
+		li Email : #{user.email}
+		li Téléphone : #{user.phone}
+		li Date de création : #{user.creation_date}
+		
+	h2 Action
+	ul
+		li: a(href="/users/"+user.id+"/update") Modifier vos informations personnelles
+		li: a(href="/services/add") Ajouter un service (une offre ou une demande)
+		li: a(href="/transactions/add") Enregistrer une transaction
+	
+	h2 Vos offres
+	if user.services
+		ul
+		- each service in user.services
+			if service.type == 'offer'
+				li #{service.title} - #{service.description}
+		ul
+		
+	h2 Vos demandes
+	if user.services
+		ul
+		- each service in user.services
+			if service.type == 'request'
+				li #{service.title} - #{service.description}
+		ul
+	
+	h2 Vos transactions
+	if user.transactions
+		ul
+		- each transaction in user.transactions
+			li #{transaction.id} - #{transaction.cost}
+		ul

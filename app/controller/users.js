@@ -79,13 +79,7 @@ exports.list = function(req, res) {
  */
 exports.detail = function(req, res) {
 	var user_id = parseInt(req.params.id);
-	
-	if ( user_id != req.session.user_id ) {
-		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'Vous ne pouvez pas lire le contenu d\'un compte ne vous appartenant pas !' }];
-		res.render('/', { flash: flash });
-	}
-	
+		
 	user = [];
 	
 	users.select(user_id)
@@ -117,12 +111,6 @@ exports.addForm = function(req, res) {
 exports.updateForm = function(req, res) {
 	var user_id = parseInt(req.params.id);
 	
-	if ( user_id != req.session.user_id ) {
-		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'Vous ne pouvez pas modifier un compte ne vous appartenant pas !' }];
-		res.render('/', { flash: flash });
-	}
-	
 	var promise = users.select(user_id);	
 	promise.then(function(user) {
 		res.render('users/update', { user: user });
@@ -137,13 +125,7 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var user_id = parseInt(req.params.id);
-	
-	if ( user_id != req.session.user_id ) {
-		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'Vous ne pouvez pas supprimer un compte ne vous appartenant pas !' }];
-		res.render('/', { flash: flash });
-	}
-	
+
 	res.render('users/delete', {user_id: user_id});
 };
 

@@ -1,0 +1,25 @@
+﻿extends layout
+
+block content
+
+	h2 Liste des services
+
+	if services
+		p
+			table
+				thead
+					tr
+						th Identifiant
+						th Titre
+						th Type
+						th Date de publication
+						
+				tbody
+				- each service in services
+					tr
+						td #{service.id}
+						td 
+							a(href='/services/'+service.id) #{service.title}
+						td #{service.type}
+						td #{service.creation_date}
+				tbody

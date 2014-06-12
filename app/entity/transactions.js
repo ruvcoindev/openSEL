@@ -85,6 +85,31 @@ Transactions.prototype.list = function() {
 };
 
 /**
+ * SELECT a list of transactions from database
+ */
+Transactions.prototype.listOwn = function(user_id) {
+	var self = this;
+	var deferred = Q.defer();
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		client.query("SELECT id"
+					+ ", cost"
+					+ ", service_id"
+					+ ", from_user_id"
+					+ ", to_user_id"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(update_date, 'YYYY-MM-DD HH24:MI:SS') as update_date"
+					+ " FROM transactions "
+					+ " WHERE user_id = $1 ", [user_id], function(err, result) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows);
+		});
+	});
+	return deferred.promise;
+};
+
+/**
  * INSERT a transaction on database
  */
 Transactions.prototype.insert = function(from_user_id, cost, username, service_id) {

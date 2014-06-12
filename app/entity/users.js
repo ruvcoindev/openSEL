@@ -56,18 +56,15 @@ Users.prototype.select = function(user_id) {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 
-		client.query("SELECT utilisateur.id as id"
+		client.query("SELECT id"
 					+ ", username"
 					+ ", role"
-					+ ", SUM(transaction_add.cost) - SUM(transaction_sub.cost) as credit"
+					+ ", 0 as credit"
 					+ ", email"
 					+ ", phone"
-					+ ", to_char(utilisateur.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
 					+ " FROM utilisateur "
-					+ " LEFT JOIN transactions as transaction_sub ON utilisateur.id = transaction_sub.from_user_id "
-					+ " LEFT JOIN transactions as transaction_add ON utilisateur.id = transaction_add.to_user_id "
-					+ " WHERE utilisateur.id = $1 "
-					+ " GROUP BY utilisateur.id, username, role, email, phone, utilisateur.creation_date "
+					+ " WHERE id = $1 "
 					+ " LIMIT 1", [user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
@@ -92,8 +89,8 @@ Users.prototype.list = function() {
 					+ ", 0 as credit"
 					+ ", email"
 					+ ", phone"
-					+ ", to_char(user.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
-					+ " FROM utilisateur as user ", function(err, result) {
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ " FROM utilisateur ", function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve(result.rows);

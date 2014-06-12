@@ -115,22 +115,26 @@ var SampleApp = function() {
 		});
 	
 		self.app.param('id', /^\d+$/);
-			
+		
+		// TODO restrict this route
+		self.app.get('/databaseReset', base.databaseReset);
+		
 		// Public routes
 		self.app.get('/', base.index);
 		self.app.get('/login', users.loginForm);
 		self.app.post('/login', users.login);
 		
-		// Restricted routes
+		// User Restricted routes
 		self.app.get('/logout', self.restrict, users.logout);
-		self.app.get('/administration', self.restrict, base.administration);
+		self.app.get('/account', self.restrict, base.account);
+		self.app.get('/catalogue', self.restrict, base.catalogue);
 		
-		// TODO restrict this route
-		self.app.get('/databaseReset', base.databaseReset);
-				
+		// Admin Restricted routes
+		self.app.get('/administration', self.restrictAdmin, base.administration);
+						
 		// User routes
-		self.app.get('/users', self.restrict, users.list);
-		self.app.get('/users/:id', self.restrict, users.detail);
+		self.app.get('/users', self.restrictAdmin, users.list);
+		self.app.get('/users/:id', self.restrictAdmin, users.detail);
 		self.app.get('/users/:id/delete', self.restrictAdmin, users.removeForm);
 		self.app.get('/users/:id/update', self.restrictAdmin, users.updateForm);
 		self.app.get('/users/add', self.restrictAdmin, users.addForm);
