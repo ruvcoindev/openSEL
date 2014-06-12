@@ -67,7 +67,7 @@ Users.prototype.select = function(user_id) {
 					+ " LEFT JOIN transactions as transaction_sub ON utilisateur.id = transaction_sub.from_user_id "
 					+ " LEFT JOIN transactions as transaction_add ON utilisateur.id = transaction_add.to_user_id "
 					+ " WHERE utilisateur.id = $1 "
-					+ " GROUP BY utilisateur.id "
+					+ " GROUP BY utilisateur.id, username, role, emain, phone, utilisateur.creation_date "
 					+ " LIMIT 1", [user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
