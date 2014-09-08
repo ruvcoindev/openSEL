@@ -5,6 +5,9 @@ var fs = require('fs');
 
 function Users() {
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+	if (typeof this.databaseURL === "undefined") {
+		this.databaseURL = "postgresql://postgres:eilrach@127.0.0.1:5432/postgres";
+    };
 };
 
 /**
@@ -131,7 +134,7 @@ Users.prototype.remove = function(user_id) {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
-		client.query("DELETE FROM utilisateurs"
+		client.query("DELETE FROM utilisateur"
 					+ " WHERE id = $1", [user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
@@ -144,18 +147,17 @@ Users.prototype.remove = function(user_id) {
 /**
  * UPDATE an user on database
  */
-Users.prototype.update = function(user_id, username, email, phone) {
+Users.prototype.update = function(user_id, email, phone) {
 	var self = this;
 	var deferred = Q.defer();
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
-		client.query("UPDATE utilisateurs SET"
-					+ " username = $1"
-					+ ", email = $2"
-					+ ", phone = $3"
+		client.query("UPDATE utilisateur SET"
+					+ " email = $1"
+					+ ", phone = $2"
 					+ ", update_date = NOW()"
-					+ " WHERE id = $4", [username, email, phone, user_id], function(err, result) {
+					+ " WHERE id = $3", [email, phone, user_id], function(err, result) {
 			done(client);
 			if ( err ) deferred.reject(err);
 			deferred.resolve();

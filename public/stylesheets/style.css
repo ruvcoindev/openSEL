@@ -171,9 +171,40 @@ div.form-group textarea
 	height: 300px;
 }
 
+table
+{
+	width: 100%;
+}
 table thead
 {
 	background-color: gainsboro;
+}
+
+div.offre
+{
+	border: 1px solid #000;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+div.offre div.titre
+{
+	border-bottom : 1px dotted #000;
+	font-size : 1.2em;
+	padding-left : 10px;
+}
+
+div.offre div.description
+{
+	padding: 10px;
+	background-color: #dea;
+}
+
+div.offre div.footer
+{
+	border-top: 1px dotted #000;
+	padding-left : 10px;
 }
 
 div.action {

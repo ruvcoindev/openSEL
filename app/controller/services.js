@@ -77,7 +77,14 @@ exports.updateForm = function(req, res) {
  */
 exports.removeForm = function(req, res) {
 	var service_id = parseInt(req.params.id);
-	res.render('services/delete', {service_id: service_id});
+	
+	var promise = services.select(service_id);
+	promise.then(function(service) {
+		res.render('services/delete', { service: service });
+	}).catch(function(err) {
+		console.log(err);
+		handleError(req, res);
+	});
 };
 
 /**
@@ -92,7 +99,7 @@ exports.add = function(req, res) {
 	var promise = services.insert(req.session.user_id, type, title, description) ;
 	
 	promise.then(function(service) {
-		res.redirect('/users/'+req.session.user_id);
+		res.redirect('/account');
 	}).catch(function(err) {
 		handleError(req, res)
 	});
@@ -108,7 +115,7 @@ exports.remove = function(req, res) {
 	var promise = services.remove(req.session.user_id, services_id);
 	
 	promise.then(function(service) {
-		res.redirect('/users/'+req.session.user_id);
+		res.redirect('/account');
 	}).catch(function(err) {
 		handleError(req, res)
 	});
@@ -129,7 +136,7 @@ exports.update = function(req, res) {
 	var promise = services.update(req.session.user_id, service_id, type, status, title, description);
 	
 	promise.then(function(service) {
-		res.redirect('/services');
+		res.redirect('/account');
 	}).catch(function(err) {
 		handleError(req, res)
 	});

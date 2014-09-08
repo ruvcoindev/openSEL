@@ -20,6 +20,9 @@ block content
 						td #{service.id}
 						td 
 							a(href='/services/'+service.id) #{service.title}
-						td #{service.type}
+						if service.type == 'request'
+							td demande
+						else
+							td offre
 						td #{service.creation_date}
 				tbody

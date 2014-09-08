@@ -14,7 +14,7 @@ var transactions = new Transactions();
 
 var handleError = function(req, res) {
 	res.writeHead(500 , {'content(type': 'text/html'});
-	res.end('An error occurred');
+	res.end('Une erreur est survenue pendant le traitement de votre demande.');
 };
 
 /**
@@ -60,16 +60,16 @@ exports.account = function(req, res) {
 		})
 		.then(function(data) {
 			user.transactions = data;
-			user['credit'] = 0;
-			for ( transaction in user.transactions ) {
+			user.credit = 0;
+			user.transactions.forEach(function(transaction) {
 				if ( transaction.from_user_id == req.session.user_id ) {
-					user['credit'] -= transaction.cost;
+					user.credit -= transaction.cost;
 				}
 				else {
-					user['credit'] += transaction.cost;
+					user.credit += transaction.cost;
 				}
-				
-			}
+			});
+			
 			res.render('account',{user: user});
 		})
 		.catch(function (err) {
@@ -83,7 +83,7 @@ exports.account = function(req, res) {
  * Select service list on database and render view
  */
 exports.catalogue = function(req, res) {
-	var promise = services.listOwn(req.session.user_id);
+	var promise = services.list();
 	
 	promise.then(function(services) {
 		res.render('catalogue',{ services: services });
@@ -112,15 +112,15 @@ exports.updateForm = function(req, res) {
  * Update an user
  */
 exports.update = function(req, res) {
-	var user_id = parseInt(req.params.id);
-	var username = req.body.username;
+	var user_id = parseInt(req.session.user_id);
 	var email = req.body.email;
 	var phone = req.body.phone;
 	
-	var promise = users.update(user_id, username,email, phone);
+	var promise = users.update(user_id, email, phone);
 	promise.then(function(user) {
 		res.redirect('/account');
 	}).catch(function(err) {
+		console.log(err);
 		handleError(req, res)
 	});	
 };

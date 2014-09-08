@@ -9,32 +9,24 @@ block content
 		
 	if services
 		h2 Les dernières offres
-		table
-			thead
-				tr
-					th Date de publication
-					th Intitulé
-					th Description
-			tbody
-			- each service in services
-				if service.type == 'offer'
-					tr
-						td #{service.creation_date}
-						td #{service.title}
-						td #{service.description}
-					
+		
+		- each service in services
+			if service.type == 'offer'
+				div.offre
+					div.titre #{service.title}
+					div.description #{service.description}
+					div.footer
+						span.auteur
+						span.date #{service.creation_date}
+						
 		h2 Les dernières demandes
-		table
-			thead
-				tr
-					th Date de publication
-					th Intitulé
-					th Description
-			tbody
-			- each service in services
-				if service.type == 'request'
-					tr
-						td #{service.creation_date}
-						td #{service.title}
-						td #{service.description}
+		
+		- each service in services
+			if service.type == 'request'
+				div.offre
+					div.titre #{service.title}
+					div.description #{service.description}
+					div.footer
+						span.auteur
+						span.date #{service.creation_date}
 					

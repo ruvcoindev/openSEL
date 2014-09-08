@@ -1,9 +1,13 @@
 ﻿extends ../layout
 
 block content
-	
+
+	a(href='/account') Retour
+
 	h2 Suppression d'un service
+	p Attention, vous allez supprimer définitivement le service #{service.title}. Toutefois, cela n'annulera pas les transactions déjà enregistrées.
+	
 	p 
-		form(method='post', action='/services/' + service_id + '/delete', id='delete-service-form')
+		form(method='post', action='/services/' + service.id + '/delete', id='delete-service-form')
 			.form-group
 				button.btn.btn-default Supprimer le service

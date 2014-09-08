@@ -21,7 +21,8 @@ block content
 		ul
 		- each service in user.services
 			if service.type == 'offer'
-				li #{service.title} - #{service.description}
+				li #{service.title} - #{service.description} - 
+					a(href="/services/"+service.id+"/delete") suppression
 		ul
 		
 	h2 Vos demandes
@@ -29,7 +30,8 @@ block content
 		ul
 		- each service in user.services
 			if service.type == 'request'
-				li #{service.title} - #{service.description}
+				li #{service.title} - #{service.description} - 
+					a(href="/services/"+service.id+"/delete") suppression
 		ul
 	
 	h2 Vos transactions

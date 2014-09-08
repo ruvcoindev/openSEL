@@ -3,6 +3,9 @@ var Q = require('q');
 
 function Services() {
 	this.databaseURL = process.env.OPENSHIFT_POSTGRESQL_DB_URL;
+	if (typeof this.databaseURL === "undefined") {
+		this.databaseURL = "postgresql://postgres:eilrach@127.0.0.1:5432/postgres";
+    };
 };
 
 /**
