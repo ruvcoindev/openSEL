@@ -192,3 +192,20 @@ exports.databaseReset = function(req, res) {
 		handleError(req, res);
 	});
 };
+
+
+/**
+ * GET /databaseSave
+ * Get a database save
+ */
+exports.databaseSave = function(req, res) {
+	res.render('administration');
+};
+
+/**
+ * GET /databaseReset
+ * for reset the database
+ */
+exports.databaseRestore = function(req, res) {
+	res.render('administration');
+};

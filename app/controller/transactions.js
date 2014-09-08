@@ -82,7 +82,7 @@ exports.add = function(req, res) {
 	var promise = transactions.insert(req.session.user_id, cost, username, service_id);
 	
 	promise.then(function() {
-		res.redirect('/users/'+user_id);
+		res.redirect('/account');
 	}).catch(function(err) {
 		handleError(req, res)
 	});

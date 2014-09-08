@@ -114,10 +114,7 @@ var SampleApp = function() {
 		  }
 		});
 	
-		self.app.param('id', /^\d+$/);
-		
-		// TODO restrict this route
-		self.app.get('/databaseReset', base.databaseReset);
+		self.app.param('id', /^\d+$/);		
 		
 		// Public routes
 		self.app.get('/', base.index);
@@ -148,6 +145,9 @@ var SampleApp = function() {
 		
 		// Admin Restricted routes
 		self.app.get('/administration', self.restrictAdmin, base.administration);
+		self.app.get('/databaseReset', self.restrictAdmin, base.databaseReset);
+		self.app.get('/databaseSave', self.restrictAdmin, base.databaseSave);
+		self.app.get('/databaseRestore', self.restrictAdmin, base.databaseRestore);
 						
 		// User routes
 		self.app.get('/users', self.restrictAdmin, users.list);
