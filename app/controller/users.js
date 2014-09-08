@@ -175,11 +175,17 @@ exports.update = function(req, res) {
 	var username = req.body.username;
 	var email = req.body.email;
 	var phone = req.body.phone;
+	var password = req.body.password;
 	
-	var promise = users.update(user_id, username,email, phone);
-	promise.then(function(user) {
-		res.redirect('/users/' + user_id);
-	}).catch(function(err) {
-		handleError(req, res)
-	});	
+	users.update(user_id, username, email, phone)
+	.then(function() {
+		if ( password.length !== 0 )
+			return users.updatePassword(user_id, password);
+	})
+	.then(function(user) {
+		res.redirect('/users');
+	})
+	.catch(function(err) {
+		handleError(req, res);
+	});
 };

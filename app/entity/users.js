@@ -173,6 +173,21 @@ Users.prototype.updatePassword = function(user_id, password) {
 	var self = this;
 	var deferred = Q.defer();
 	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		
+		bcrypt.genSalt(10, function(err, salt) {
+			bcrypt.hash(password, salt, function(err, hash) {
+				client.query("UPDATE utilisateur SET"
+							+ " password = $1"
+							+ ", update_date = NOW()"
+							+ " WHERE id = $2", [hash, user_id], function(err, result) {
+					done(client);
+					if ( err ) deferred.reject(err);
+					deferred.resolve();
+				});						
+			});
+		});
+	});
 	return deferred.promise;
 };
 

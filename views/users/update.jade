@@ -2,19 +2,22 @@
 
 block content
 
-	a(href='/users/'+user_id) Retour
+	a(href='/users/') Retour
 	
-	h2 Modification de vos informations personnelles
+	h2 Modification des informations personnelles
 	p 
-		form(method='post', action='/users/' + user_id + '/update', id='update-user-form')
+		form(method='post', action='/users/' + user.id + '/update', id='update-user-form')
 			.form-group
 				label(for='username') Nom d'utilisateur
-				input(type='text', value=user.name, name='username', class='form-control', id='username', placeholder='Entrez le nom d\'utilisateur')
+				input(type='text', name='username', class='form-control', id='username', value='#{user.username}')
+			.form-group
+				label(for='password') Mot de passe
+				input(type='text', name='password', class='form-control', id='password', placeholder='Entrez le nouveau mot de passe')
 			.form-group
 				label(for='email') Votre addresse email
-				input(type='text', name='email', class='form-control', id='email', placeholder='Entrez une addresse email valide')
+				input(type='text', name='email', class='form-control', id='email', value='#{user.email}')
 			.form-group
 				label(for='phone') Votre numéro de téléphone
-				input(type='text', name='phone', class='form-control', id='phone', placeholder='Entrez votre numéro de téléphone')
+				input(type='text', name='phone', class='form-control', id='phone', value='#{user.phone}')
 			.form-group
-				button.btn.btn-default Modifier vos informations personnelles
+				button.btn.btn-default Modifier les informations personnelles
