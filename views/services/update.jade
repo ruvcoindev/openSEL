@@ -2,7 +2,7 @@
 
 block content
 
-	a(href='/administration') Retour
+	a(href='/account') Retour
 	
 	h2 Modification d'un service
 	p 
@@ -12,9 +12,17 @@ block content
 				input(type='text', value=service.title, name='title', class='form-control', id='title', placeholder='Entrez le titre de votre service')
 			.form-group
 				label(for='description') La description
-				textarea(name='description', value=service.description, class='form-control', id='description', placeholder='Entrez la description de votre service')
+				textarea(name='description', class='form-control', id='description', placeholder='Entrez la description de votre service') #{service.description}
+					
 			.form-group
 				label(for='type') Le type
-				textarea(name='type', value=service.type, class='form-control', id='type', placeholder='Entrez le type de votre service')
+				select(name='type')
+					if service.type == 'request'
+						option(value="request", selected="true") Demande
+						option(value="offer") Offre
+					else
+						option(value="request") Demande
+						option(value="offer", selected="true") Offre
 			.form-group
 				button.btn.btn-default Modifier le service
+			div(id="space")

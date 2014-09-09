@@ -179,18 +179,17 @@ Services.prototype.remove = function(user_id, service_id) {
 /**
  * UPDATE a service on database
  */
-Services.prototype.update = function(service_id, type, status, title, description) {
+Services.prototype.update = function(user_id, service_id, type, title, description) {
 	var self = this;
 	var deferred = Q.defer();
 		
 	pg.connect(self.databaseURL, function(err, client, done) {
 		client.query("UPDATE services SET"
 					+ " type = $1"
-					+ " status = $2"
-					+ " title = $3"
-					+ ", description = $4"
+					+ ", title = $2"
+					+ ", description = $3"
 					+ ", update_date = NOW()"
-					+ " WHERE id = $5 AND user_id = $6", [type, status, title, description, service_id, user_id], function(err, result) {
+					+ " WHERE id = $4 AND user_id = $5", [type, title, description, service_id, user_id], function(err, result) {
 					
 			done(client);
 			if ( err ) deferred.reject(err);

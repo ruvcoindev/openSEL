@@ -131,13 +131,13 @@ exports.update = function(req, res) {
 	var title = req.body.title;
 	var description = req.body.description;
 	var type = req.body.type;
-	var status = req.body.status;
 	
-	var promise = services.update(req.session.user_id, service_id, type, status, title, description);
+	var promise = services.update(req.session.user_id, service_id, type, title, description);
 	
 	promise.then(function(service) {
 		res.redirect('/account');
 	}).catch(function(err) {
-		handleError(req, res)
+		console.log(err);
+		handleError(req, res);
 	});
  };
