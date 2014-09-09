@@ -1,18 +1,15 @@
 body
 {
-    margin: 10px 0 ;
+    margin: 0 ;
     padding: 0 ;
     text-align: center ;
     font: 0.8em "Trebuchet MS", helvetica, sans-serif ;
-    background: #dea ;
 }
 
 div#conteneur
 {
-    width: 770px ;
     margin: 0 auto ;
     text-align: left ;
-    border: 2px solid #ab4 ;
     background: #fff ;
 }
 
@@ -38,21 +35,20 @@ ul#menu
     height: 35px ;
     margin: 0 ;
     padding: 0 ;
-    background: url(../images/bg_menu.gif) repeat-x 0 -25px ;
+    background-color: #dea ;
     list-style-type: none ;
 }
 
 ul#menu li a
 {
-    width: 130px ;
-    line-height: 25px ;
+    width: 150px ;
+    line-height: 35px ;
     font-size: 1.2em ;
     font-weight: bold ;
     letter-spacing: 2px ;
-    color: #fff ;
+    color: #558b2f ;
     display: block ;
     text-decoration: none ;
-    border-right: 2px solid #dea ;
 }
 
 ul#menu li
@@ -63,23 +59,22 @@ ul#menu li
 
 ul#menu li a:hover
 {
-    background: url(../images/bg_menu.gif) repeat-x 0 0 ;
+    background-color: #558b2f ;
+	color: #fff;
 }
 
 div#contenu
 {
-    padding: 0 25px 0 100px ;
-    background: url(../images/bg_page.gif) no-repeat 15px 15px ;
+    padding: 0 10px 0 10px ;
 }
 
 div#contenu h2
 {
     padding-left: 25px ;
     line-height: 25px ;
-    font-size: 1.4em ;
+    font-size: 1.8em ;
     background: url(../images/little_apple.gif) no-repeat left bottom ;
     color: #9b2 ;
-    border-bottom: 1px solid #9b2 ;
 }
 
 div#contenu h3
@@ -94,8 +89,7 @@ div#contenu h3
 div#contenu p
 {
     text-align: justify ;
-    text-indent: 2em ;
-    line-height: 1.7em ;
+	font-size: 1.2em ;
 }
 
 div#contenu a
@@ -110,7 +104,6 @@ div#contenu a:hover
 
 div#space
 {
-	height: 20px;
 	clear: both;
 }
 
@@ -143,6 +136,28 @@ pre span.comment
     color: #b30000 ;
 }
 
+div.detail
+{
+	background-color: #dea;
+	padding: 5px;
+}
+
+div.detail table
+{
+	font-size : 1.2em;
+	border-collapse:collapse;
+}
+
+div.detail table th {
+	border-right: 3px solid #558b2f;
+	padding-left : 20px;
+	color:#33691e;
+}
+
+div.detail table td{
+	padding-left : 20px;
+}
+
 form
 {
 	background-color: #f0ffc3;
@@ -151,6 +166,7 @@ form
 
 div.form-group
 {
+	margin-bottom: 10px;
 }
 
 div.form-group label 
@@ -158,11 +174,15 @@ div.form-group label
 	display: block;
 	width: 150px;
 	float: left;
+	color:#33691e;
+	font-size: 1.3em;
 }
 
 div.form-group input[type=text], div.form-group input[type=password]
 {
-	width: 200px;
+	width: 400px;
+	font-size: 1.3em;
+	padding-left: 5px;
 }
 
 div.form-group textarea
@@ -170,6 +190,19 @@ div.form-group textarea
 	width: 400px;
 	height: 300px;
 }
+
+div.form-group button
+{
+	border: 0;
+	color: #fff;
+	background-color: #558b2f;
+	line-height: 35px ;
+    font-size: 1.2em ;
+    font-weight: bold ;
+    letter-spacing: 2px;
+	float : right;
+}
+
 
 table
 {
@@ -182,15 +215,12 @@ table thead
 
 div.offre
 {
-	border: 1px solid #000;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+	background-color: #f0ffc3;
+	margin-bottom: 20px;
 }
 
 div.offre div.titre
 {
-	border-bottom : 1px dotted #000;
 	font-size : 1.2em;
 	padding-left : 10px;
 }
@@ -198,13 +228,13 @@ div.offre div.titre
 div.offre div.description
 {
 	padding: 10px;
-	background-color: #dea;
 }
 
 div.offre div.footer
 {
-	border-top: 1px dotted #000;
 	padding-left : 10px;
+	padding-right : 10px;
+	text-align: right;
 }
 
 div.action {
