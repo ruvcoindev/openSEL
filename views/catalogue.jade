@@ -5,24 +5,15 @@ block content
 	h2 Liste des services
 
 	if services
-		p
-			table
-				thead
-					tr
-						th Identifiant
-						th Titre
-						th Type
-						th Date de publication
-						
-				tbody
-				- each service in services
-					tr
-						td #{service.id}
-						td 
-							a(href='/services/'+service.id) #{service.title}
-						if service.type == 'request'
-							td demande
-						else
-							td offre
-						td #{service.creation_date}
-				tbody
+		- each service in services
+			div
+				h3 
+					if service.type == 'request'
+						b [demande] &nbsp;
+					else
+						b [offre] &nbsp;
+					span #{service.title} &nbsp;
+					span (service n° #{service.id})
+				p #{service.description.substr(1,200)} ...
+					br
+					a(href='/services/'+service.id) Voir le détail et les informations permettant de contacter le seliste
