@@ -14,6 +14,6 @@ block content
 						b [offre] &nbsp;
 					span #{service.title} &nbsp;
 					span (service n° #{service.id})
-				p #{service.description.substr(1,200)} ...
+				p #{service.description.substr(0,200)} ...
 					br
 					a(href='/services/'+service.id) Voir le détail et les informations permettant de contacter le seliste
