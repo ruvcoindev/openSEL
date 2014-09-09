@@ -6,7 +6,7 @@ block content
 
 	if services
 		- each service in services
-			div
+			div.offre
 				h3 
 					if service.type == 'request'
 						b [demande] &nbsp;
@@ -14,6 +14,6 @@ block content
 						b [offre] &nbsp;
 					span #{service.title} &nbsp;
 					span (service n° #{service.id})
-				p #{service.description.substr(0,200)} ...
+				div.description #{service.description} ...
 					br
 					a(href='/services/'+service.id) Voir le détail et les informations permettant de contacter le seliste

@@ -45,15 +45,17 @@ block content
 		a(href="/services/add") ajouter un service (une offre ou une demande).
 		ul
 		- each service in user.services
-			h3 
-				if service.type == 'request'
-					b [demande] &nbsp;
-				else
-					b [offre] &nbsp;
-				span #{service.title} (
-				a(href="/services/"+service.id+"/update") modification
-				span )
-			p #{service.description}
-			a(href="/services/"+service.id+"/delete") Supprimer le service
+			div.offre
+				h3 
+					if service.type == 'request'
+						b [demande] &nbsp;
+					else
+						b [offre] &nbsp;
+					span #{service.title} (
+					a(href="/services/"+service.id+"/update") modification
+					span )
+				div.description #{service.description}
+				div.footer 
+					a(href="/services/"+service.id+"/delete") Supprimer le service
 				
 		ul
