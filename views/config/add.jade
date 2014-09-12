@@ -1,0 +1,18 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Création d'un élément de configuration
+	p 
+		form(method='post', action='/config/add', id='add-config-form')
+			.form-group
+				label(for='key') La clé
+				input(type='text', name='key', class='form-control', id='key', placeholder='Entrez la clé de votre élément')
+			.form-group
+				label(for='value') La valeur
+				input(type='text', name='value', class='form-control', id='value', placeholder='Entrez la valeur de votre élément')
+			.form-group
+				button.btn.btn-default Créer l'élément de configuration
+			div(id="space")

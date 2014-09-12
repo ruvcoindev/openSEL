@@ -1,18 +1,22 @@
 ﻿extends layout
 
 block content
+
+	nav
+		ul(id="menu_secondaire")
+			li: a(href="/update") Modifier vos informations personnelles.
+			li: a(href="/updatePassword") Modifier votre mot de passe.
+			li: a(href="/services/add") Ajouter un service (une offre ou une demande).
+			li: a(href="/transactions/add") Enregistrer une nouvelle transaction.
+			
 	h2 Bonjour #{user.username} 
 	p Votre adresse email est #{user.email} et votre numéro de téléphone est #{user.phone}.
 	p Ces informations ne sont communiquées qu'aux membres de Lambersel, elles servent à vous contacter si un utilisateur est intéressé par l'une de vos offres ou demandes.
-	p Si ces informations sont érronées, vous pouvez 
-		a(href="/update") modifier vos informations personnelles.
 
 	h2 Vous disposez de #{user.credit} pétales
 	
 	p Si vous avez bénéficié d'un service de la part d'un autre membre de Lambersel, vous devez 
 		a(href="/transactions/add") enregistrer une nouvelle transaction.
-	p Attention, une fois une transaction créée, votre compte de pétales sera débité, et celui de l'utilisateur vous ayant fourni un service sera crédité. Cette opération n'est pas annulable.
-	p En cas d'erreur, merci de contacter l'un des annimateurs de Lambersel, la transaction sera rectifiée.
 		
 		table
 			caption Détail de vos transactions

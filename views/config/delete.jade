@@ -1,0 +1,14 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/account') Retour
+
+	h2 Suppression d'une configuration
+	p Attention, vous allez supprimer définitivement la configuration #{config.key} ayant pour valeur #{config.value}.
+	
+	p 
+		form(method='post', action='/config/' + config.id + '/delete', id='delete-config-form')
+			.form-group
+				button.btn.btn-default Supprimer la configuration
+			div(id="space")

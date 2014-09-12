@@ -2,20 +2,24 @@
 
 var flash = {};
 
+var Config = require('../entity/config');
 var Users = require('../entity/users');
 var News = require('../entity/news');
 var Services = require('../entity/services');
 var Transactions = require('../entity/transactions');
 
+var config = new Config();
 var news = new News();
 var users = new Users();
 var services = new Services();
 var transactions = new Transactions();
 
 var handleError = function(req, res) {
-	res.writeHead(500 , {'content(type': 'text/html'});
-	res.end('Une erreur est survenue pendant le traitement de votre demande.');
+	flash.type = 'alert-error';
+	flash.messages = [{ msg: 'Une erreur est survenue.' }];
+	res.render('info', { flash: flash });
 };
+
 
 /**
  * GET /
@@ -125,6 +129,46 @@ exports.update = function(req, res) {
 	});	
 };
 
+
+/**
+ * GET /updatePassword
+ * Render update password form
+ */
+exports.updatePasswordForm = function(req, res) {
+	res.render('updatePassword');
+};
+
+
+
+/**
+ * POST /updatePassword
+ * Update an user password
+ */
+exports.updatePassword = function(req, res) {
+	var user_id = parseInt(req.session.user_id);
+	var newPassword = req.body.new_password;
+	var newPasswordCheck = req.body.new_password_check;
+	
+	if ( newPassword == newPasswordCheck )
+	{
+		users.updatePassword(user_id, newPassword)
+		.then(function(user) {
+			flash.type = 'alert-info';
+			flash.messages = [{ msg: 'Votre nouveau mot de passe a été enregistré.' }];
+			res.render('info', { flash: flash });
+		}).catch(function(err) {
+			console.log(err);
+			handleError(req, res)
+		});	
+	}
+	else
+	{
+		flash.type = 'alert-error';
+		flash.messages = [{ msg: 'Les mots de passe ne sont pas identiques. Veuillez réessayer.' }];
+		res.render('updatePassword', { flash: flash });
+	}
+};
+
 /**
  * GET /addTransaction
  * Add a transaction form
@@ -161,14 +205,16 @@ exports.administration = function(req, res) {
 	res.render('administration');
 };
 
-
 /**
- * GET /databaseReset
- * for reset the database
+ * GET /databaseUpdate
+ * for update database without loose data
  */
-exports.databaseReset = function(req, res) {
+exports.databaseUpdate = function(req, res) {
 
-	users.create()
+	config.create()
+	.then(function() {
+		return users.create();
+	})
 	.then(function() {
 		return news.create();
 	})
@@ -179,13 +225,43 @@ exports.databaseReset = function(req, res) {
 		return transactions.create();
 	})
 	.then(function() {
+		flash.type = 'alert-info';
+		flash.messages = [{ msg: 'La base de donnée viens d\'être mise à jour.' }];
+		res.render('administration', { flash: flash });	
+	})
+	.catch(function(err) {
+		flash.type = 'alert-info';
+		flash.messages = [{ msg: 'La base de donnée viens d\'être mise à jour.' }];
+		res.render('administration', { flash: flash });	
+	});
+};
+
+
+/**
+ * GET /databaseReset
+ * for reset the database
+ */
+exports.databaseReset = function(req, res) {
+
+	config.reset()
+	.then(function() {
+		return users.reset();
+	})
+	.then(function() {
+		return news.reset();
+	})
+	.then(function() {
+		return services.reset();
+	})
+	.then(function() {
+		return transactions.reset();
+	})
+	.then(function() {
 		return users.insert("admin","admin","admin","admin@admin.admin","00.00.00.00");
 	})
 	.then(function() {
-		fs.unlink("/app/install.txt");
-	
 		flash.type = 'alert-info';
-		flash.messages = [{ msg: 'La base de donnée viens d\'être ré-installée.' }];
+		flash.messages = [{ msg: 'La base de donnée viens d\'être mise à jour.' }];
 		res.render('administration', { flash: flash });	
 	})
 	.catch(function(err) {

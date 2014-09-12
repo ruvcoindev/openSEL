@@ -1,22 +1,36 @@
 ﻿extends layout
 
 block content
-	.action
-		p Gestion des utilisateurs
-		a(href='/users' id='admin_users')
+		p
+			a(href='/users') Gestion des utilisateurs
+			br 
+			div Pour ajouter, supprimer et modifier des utilisateurs.
 	
-	.action
-		p Gestion des nouvelles
-		a(href='/news' id='admin_news')
-		
-	.action
-		p Ré-initialiser la base de données
-		a(href='/databaseReset' id='admin_database')
+		p 
+			a(href='/news') Gestion des nouvelles
+			br 
+			div Pour ajouter, supprimer et modifier les nouvelles.
 
-	.action
-		p Sauvegarder la base de données
-		a(href='/databaseSave' id='admin_database')
+		p 
+			a(href='/config') Configuration
+			br 
+			div Pour gérer la configuration du site.
+		p 
+			a(href='/databaseUpdate') Mettre à jour la base de données
+			br 
+			div Permet de mettre à jour la base de données sans perdre de données.
 		
-	.action
-		p Restaurer une base de données
-		a(href='/databaseRestore' id='admin_database')
+		p 
+			a(href='/databaseReset') Ré-initialiser la base de données
+			br 
+			div Remet à zero la base de donnée (toutes les données seront perdues).
+
+		p 
+			a(href='/databaseSave') Sauvegarder la base de données
+			br 
+			div Permet de télécharger une sauvegarde de la base de données.
+		
+		p 
+			a(href='/databaseRestore') Restaurer une base de données
+			br 
+			div Permet de charger une sauvegarde de la base de données.

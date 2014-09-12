@@ -2,6 +2,7 @@
 
 //  OpenShift sample Node application
 var express = require('express');
+var nodemailer = require('nodemailer');
 
 // load controllers
 var base = require('./app/controller/base');
@@ -9,6 +10,8 @@ var news = require('./app/controller/news');
 var users = require('./app/controller/users');
 var services = require('./app/controller/services');
 var transactions = require('./app/controller/transactions');
+var email = require('./app/controller/mail');
+var configuration = require('./app/controller/configuration');
 
 /**
  *  Define the sample application.
@@ -22,7 +25,7 @@ var SampleApp = function() {
     /*  ================================================================  */
     /*  Helper functions.                                                 */
     /*  ================================================================  */
-
+	
     /**
      *  Set up server IP address and port # using env variables/defaults.
      */
@@ -32,7 +35,7 @@ var SampleApp = function() {
         self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
         if (typeof self.ipaddress === "undefined") {
-            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
+            //  Log errors on OpenShift but continue on 127.0.0.1 - this
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
@@ -76,7 +79,9 @@ var SampleApp = function() {
     /*  App server functions (main app logic here).                       */
     /*  ================================================================  */
 
-	// authentication verification
+	/**
+	 * Restrict to authenticated use
+	 */
 	self.restrict = function(req, res, next) {
 		if ( req.session.authenticated ) {
 			next();
@@ -86,15 +91,19 @@ var SampleApp = function() {
 		}
 	};
 	
+	/**
+	 * Restrict to admin user
+	 */
 	self.restrictAdmin = function(req, res, next) {
 		if ( req.session.authenticated && req.session.isAdmin ) {
 			next();
 		} else {
-			req.session.error = 'Vous devez être connecter pour acceder à cette page';
+			req.session.error = 'Vous devez être connecter et administrateur pour acceder à cette page';
 			res.redirect('/login');
 		}
 	};
 	
+
     /**
      *  Create the routing table entries + handlers for the application.
      */
@@ -120,6 +129,8 @@ var SampleApp = function() {
 		self.app.get('/', base.index);
 		self.app.get('/login', users.loginForm);
 		self.app.post('/login', users.login);
+		self.app.get('/resetPassword', users.resetPasswordForm);
+		self.app.post('/resetPassword', users.resetPassword);
 		
 		// User Restricted routes
 		self.app.get('/logout', self.restrict, users.logout);
@@ -128,6 +139,9 @@ var SampleApp = function() {
 		
 		self.app.get('/update', self.restrict, base.updateForm); // update personal information
 		self.app.post('/update', self.restrict, base.update);
+		
+		self.app.get('/updatePassword', self.restrict, base.updatePasswordForm); // update personal information
+		self.app.post('/updatePassword', self.restrict, base.updatePassword);
 		
 		self.app.get('/transactions/add', self.restrict, transactions.addForm);
 		self.app.post('/transactions/add', self.restrict, transactions.add);
@@ -145,10 +159,21 @@ var SampleApp = function() {
 		
 		// Admin Restricted routes
 		self.app.get('/administration', self.restrictAdmin, base.administration);
+		self.app.get('/databaseUpdate', self.restrictAdmin, base.databaseUpdate);
 		self.app.get('/databaseReset', self.restrictAdmin, base.databaseReset);
 		self.app.get('/databaseSave', self.restrictAdmin, base.databaseSave);
 		self.app.get('/databaseRestore', self.restrictAdmin, base.databaseRestore);
-						
+
+		// Config routes
+		self.app.get('/config', self.restrictAdmin, configuration.index);
+		self.app.get('/config/reload', self.restrictAdmin, configuration.reload);
+		self.app.get('/config/add', self.restrictAdmin, configuration.addForm);
+		self.app.get('/config/:id/delete', self.restrictAdmin, configuration.removeForm);
+		self.app.get('/config/:id/update', self.restrictAdmin, configuration.updateForm);
+		self.app.post('/config/add', self.restrictAdmin, configuration.add);
+		self.app.post('/config/:id/update', self.restrictAdmin, configuration.update);
+		self.app.post('/config/:id/delete', self.restrictAdmin, configuration.remove);
+		
 		// User routes
 		self.app.get('/users', self.restrictAdmin, users.list);
 		self.app.get('/users/:id', self.restrictAdmin, users.detail);

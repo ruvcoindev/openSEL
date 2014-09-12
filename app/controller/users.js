@@ -1,8 +1,15 @@
-﻿var Users = require('../entity/users');
+﻿var email = require('./mail');
+var Users = require('../entity/users');
 var Services = require('../entity/services');
 var users = new Users();
 var services = new Services();
+var generatePassword = require('password-generator');
 
+var flash = {};
+
+/**
+ * Generic error message
+ */
 var handleError = function(req, res) {
 	res.writeHead(500 , {'content(type': 'text/html'});
 	res.end('An error occurred');
@@ -24,6 +31,39 @@ exports.logout = function(req, res) {
 	req.session.destroy();
 	res.redirect('/');
 };
+
+/**
+ * GET /resetPassword
+ * Render login view
+ */
+exports.resetPasswordForm = function(req, res) {
+	res.render('resetPassword');
+};
+
+
+/**
+ * POST /resetPassword
+ */
+exports.resetPassword = function(req, res) {
+	var username = req.body.username;
+	
+	users.selectByUserName(username)
+		.then(function(user) {
+			pass = generatePassword(12, false);
+			email.sendNewPassword(user, pass);
+			return users.updatePassword(user.id, pass);
+		})
+		.then(function() {
+			flash.type = 'alert-info';
+			flash.messages = [{ msg: 'Votre nouveau mot de passe vient de vous être envoyé par mail.' }];
+			res.render('login', { flash: flash });
+		})
+		.catch(function(err) {
+			console.log(err);
+			handleError(req, res)
+		});
+};
+
 
 /**
  * POST /login

@@ -17,6 +17,33 @@ Services.prototype.create = function() {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
+		client.query("CREATE TABLE services( "
+						+ "id SERIAL"
+						+ ", user_id INTEGER"
+						+ ", title CHARACTER VARYING(32)"
+						+ ", description TEXT"
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", type SERVICES_TYPE DEFAULT 'offer'::SERVICES_TYPE"
+						+ ", status SERVICES_STATUS DEFAULT 'disable'::SERVICES_STATUS)", function(err) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
+		});
+	});
+	
+	return deferred.promise;
+}
+
+/**
+ * Reset database model
+ */
+Services.prototype.reset = function() {
+	var self = this;
+	var deferred = Q.defer();
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		
 		client.query("DROP TABLE IF EXISTS services", function(err) {
 			if ( err ) {done(client); deferred.reject(err);}
 		});

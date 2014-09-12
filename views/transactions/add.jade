@@ -2,10 +2,10 @@
 
 block content
 
-	a(href='/account') Retour
-	
 	h2 Création d'une transaction
 	p Une transaction représente un certain nombre de pétale que vous offrez à un membre de lambersel en échange d'un service rendu.
+	p Attention, une fois une transaction créée, votre compte de pétales sera débité, et celui de l'utilisateur vous ayant fourni un service sera crédité. Cette opération n'est pas annulable.
+	p En cas d'erreur, merci de contacter l'un des animateurs de Lambersel, la transaction sera rectifiée.
 		form(method='post', action='/transactions/add', id='add-transaction-form')
 			.form-group
 				label(for='cost') 

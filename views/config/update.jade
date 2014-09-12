@@ -1,0 +1,18 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Modification d'une configuration
+	p 
+		form(method='post', action='/config/' + config.id + '/update', id='update-config-form')
+			.form-group
+				label(for='key') La clé
+				input(type='text', value=config.key, name='key', class='form-control', id='key', placeholder='Entrez la clé')
+			.form-group
+				label(for='value') La valeur
+				input(type='text', value=config.value, name='value', class='form-control', id='value', placeholder='Entrez la valeur')
+			.form-group
+				button.btn.btn-default Modifier la configuration
+			div(id="space")

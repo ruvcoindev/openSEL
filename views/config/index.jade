@@ -1,0 +1,34 @@
+﻿extends ../layout
+
+block content
+
+	a(href='/administration') Retour
+	
+	h2 Configuration
+	a(href="/config/reload") Recharger la configuration
+	br
+	a(href="/config/add") Ajouter un nouvel élément
+	if config
+		p
+			table
+				thead
+					tr
+						th Identifiant
+						th Clé
+						th Valeur
+						th Date de création
+						th Date de modification
+						th Action
+						
+				tbody
+				- each conf in config
+					tr
+						td #{conf.id}
+						td #{conf.key}
+						td #{conf.value}
+						td #{conf.creation_date}
+						td #{conf.update_date}
+						td
+							a(href='/config/'+ conf.id + '/update') Modifier
+							a(href='/config/'+ conf.id + '/delete') Supprimer
+				tbody

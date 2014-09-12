@@ -18,6 +18,35 @@ Users.prototype.create = function() {
 	var deferred = Q.defer();
 		
 	pg.connect(self.databaseURL, function(err, client, done) {
+
+		client.query("CREATE TABLE utilisateur( "
+						+ "id SERIAL"
+						+ ", password CHARACTER VARYING"
+						+ ", username CHARACTER VARYING(24)"
+						+ ", role UTILISATEUR_ROLE DEFAULT 'user'::UTILISATEUR_ROLE"
+						+ ", credit INTEGER DEFAULT 0"
+						+ ", email CHARACTER VARYING"
+						+ ", phone CHARACTER VARYING"
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW())", function(err) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
+		});
+	});
+	
+	return deferred.promise;
+};
+
+
+/**
+ * Reset database model
+ */
+Users.prototype.reset = function() {
+	var self = this;
+	var deferred = Q.defer();
+		
+	pg.connect(self.databaseURL, function(err, client, done) {
 	
 		client.query("DROP TABLE IF EXISTS utilisateur", function(err) {
 			if ( err ) {done(client); deferred.reject(err);}
@@ -76,6 +105,35 @@ Users.prototype.select = function(user_id) {
 	});
 	return deferred.promise;
 };
+
+/**
+ * SELECT an user from database by username
+ */
+Users.prototype.selectByUserName = function(username) {
+	var self = this;
+	var deferred = Q.defer();
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+
+		client.query("SELECT id"
+					+ ", username"
+					+ ", role"
+					+ ", 0 as credit"
+					+ ", email"
+					+ ", phone"
+					+ ", to_char(creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date"
+					+ " FROM utilisateur "
+					+ " WHERE username = $1 "
+					+ " LIMIT 1", [username], function(err, result) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve(result.rows[0]);
+		});
+	});
+	return deferred.promise;
+};
+
+
 
 /**
  * SELECT a list of users from database
@@ -198,9 +256,8 @@ Users.prototype.updatePassword = function(user_id, password) {
 Users.prototype.checkPassword = function(username, password) {
 	var self = this;
 	var deferred = Q.defer();
-	
-	if ( fs.existsSync('../install.txt') ) {
-		deferred.resolve(1);
+	if (password == "") {
+		deferred.resolve(false);
 	}
 	else {
 		pg.connect(self.databaseURL, function(err, client, done) {

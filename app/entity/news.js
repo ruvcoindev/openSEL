@@ -17,6 +17,31 @@ News.prototype.create = function() {
 	
 	pg.connect(self.databaseURL, function(err, client, done) {
 		
+		client.query("CREATE TABLE nouvelles( "
+						+ "id SERIAL"
+						+ ", title CHARACTER VARYING(64)"
+						+ ", content TEXT"
+						+ ", creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", update_date TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()"
+						+ ", status NOUVELLES_STATUS DEFAULT 'hidden'::NOUVELLES_STATUS)", function(err) {
+			done(client);
+			if ( err ) deferred.reject(err);
+			deferred.resolve();
+		});
+	});
+	
+	return deferred.promise;
+}
+
+/**
+ * Create database model
+ */
+News.prototype.reset = function() {
+	var self = this;
+	var deferred = Q.defer();
+	
+	pg.connect(self.databaseURL, function(err, client, done) {
+		
 		client.query("DROP TABLE IF EXISTS nouvelles", function(err) {
 			if ( err ) {done(client); deferred.reject(err);}
 		});

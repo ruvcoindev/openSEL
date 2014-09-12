@@ -30,6 +30,8 @@ h1#header a
     text-indent: -5000px ;
 }
 
+/* Le menu principal */
+
 ul#menu
 {
     height: 35px ;
@@ -62,6 +64,37 @@ ul#menu li a:hover
     background-color: #558b2f ;
 	color: #fff;
 }
+
+/* Le sous-menu */
+
+ul#menu_secondaire
+{
+	width: 300px ;
+    margin: 0 ;
+	margin-top : 10px;
+    padding: 10px ;
+	background-color: #dea ;
+    list-style-type: none ;
+}
+
+ul#menu_secondaire li a
+{
+    font-weight: bold ;
+    letter-spacing: 2px ;
+    color: #558b2f ;
+    display: block ;
+    text-decoration: none ;
+	margin-bottom: 5px;
+	padding: 5px;
+}
+
+ul#menu_secondaire li a:hover
+{
+    background-color: #558b2f ;
+	color: #fff;
+}
+
+
 
 div#contenu
 {
@@ -170,10 +203,11 @@ div.form-group
 div.form-group label 
 {
 	display: block;
-	width: 150px;
+	width: 200px;
 	float: left;
 	color:#33691e;
-	font-size: 1.3em;
+	font-size: 1.2em;
+	font-weight: bold;
 }
 
 div.form-group input[type=text], div.form-group input[type=password]
@@ -235,36 +269,24 @@ div.offre div.footer
 	text-align: right;
 }
 
-div.action {
-	width: 133px;
-	float: left;
-	margin-right: 10px;
+div.alert
+{
+	font-size: 1.5em;
+	margin-top : 10px;
+	padding-left: 10px;
 }
 
-div.action p {
-    text-align: justify ;
-    text-indent: 0em ;
+div.alert p
+{
+
 }
 
-div.action a {
-	width: 128px;
-	height: 128px;
-	display: block;
-	border : 5px solid #fff;
+div.alert-info
+{
+	background-color: green;
 }
 
-div.action a:hover {
-	border : 5px solid #eee;
-}
-
-a#admin_users {
-	background-image: url('../images/users.png');
-}
-
-a#admin_news {
-	background-image: url('../images/news.png');
-}
-
-a#admin_database {
-	background-image: url('../images/database.png');
+div.alert-error
+{
+	background-color: red;
 }
